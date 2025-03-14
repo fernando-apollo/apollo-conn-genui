@@ -1,61 +1,76 @@
 /* fonts.css */
 @font-face {
-  font-family: 'Aeonik';
-  src: url('/fonts/aeonik/Aeonik-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
+    font-family: 'Aeonik';
+    src: url('/fonts/aeonik/Aeonik-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Aeonik';
-  src: url('/fonts/aeonik/Aeonik-BoldItalic.ttf') format('truetype');
-  font-weight: 700;
-  font-style: italic;
+    font-family: 'Aeonik';
+    src: url('/fonts/aeonik/Aeonik-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
 }
 
 @font-face {
-  font-family: 'Aeonik';
-  src: url('fonts/aeonik/Aeonik-Medium.ttf') format('truetype');
-  font-weight: 500;
-  font-style: normal;
+    font-family: 'Aeonik';
+    src: url('fonts/aeonik/Aeonik-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Aeonik';
-  src: url('/fonts/aeonik/Aeonik-MediumItalic.ttf') format('truetype');
-  font-weight: 500;
-  font-style: italic;
+    font-family: 'Aeonik';
+    src: url('/fonts/aeonik/Aeonik-MediumItalic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
 }
 
 @font-face {
-  font-family: 'Aeonik';
-  src: url('/fonts/aeonik/Aeonik-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
+    font-family: 'Aeonik';
+    src: url('/fonts/aeonik/Aeonik-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Aeonik';
-  src: url('/fonts/aeonik/Aeonik-RegularItalic.ttf') format('truetype');
-  font-weight: 400;
-  font-style: italic;
+    font-family: 'Aeonik';
+    src: url('/fonts/aeonik/Aeonik-RegularItalic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
 }
 
 /* Fira Code */
 @font-face {
-  font-family: 'Fira Code';
-  src: url('/fonts/firaCode/FiraCode-VariableFont_wght.ttf') format('truetype');
+    font-family: 'Fira Code';
+    src: url('/fonts/firaCode/FiraCode-VariableFont_wght.ttf') format('truetype');
 }
 
 /* Inter */
 @font-face {
-  font-family: 'Inter';
-  src: url('/fonts/inter/InterVariable.ttf') format('truetype');
-  font-style: normal;
+    font-family: 'Inter';
+    src: url('/fonts/inter/InterVariable.ttf') format('truetype');
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: url('/fonts/inter/InterVariable-Italic.ttf') format('truetype');
-  font-style: italic;
+    font-family: 'Fira Code';
+    src: url('/fonts/firaCode/static/FiraCode-Bold.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'Fira Code';
+    src: url('/fonts/firaCode/static/FiraCode-FiraCode-Medium.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'Fira Code';
+    src: url('/fonts/firaCode/static/FiraCode-FiraCode-Regular.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 400;
 }

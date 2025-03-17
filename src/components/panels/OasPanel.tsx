@@ -11,7 +11,9 @@ export const OasPanel = ({onChange}: IOasPanelProps) => {
   const {oasGen, handleOasFileChange} = useAppState();
 
   return (
-    <CardRoot className="oas-panel-container" m={0} size='sm'>
+    // TODO: change this for VSTack
+    <CardRoot
+      className="oas-panel-container" m={2} style={{flex: 1}} size='sm'>
       <CardHeader>
         <Heading>
           <OASSpecChooser onFileChange={handleOasFileChange}/>

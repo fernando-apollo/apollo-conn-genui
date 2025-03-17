@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { JsonGen, OasGen } from 'apollo-oas';
-import { Get, IType } from 'apollo-oas/oas';
+import { OasGen } from 'apollo-oas';
+import { IType } from 'apollo-oas/oas/nodes/types';
 
 const SingleFileUploader = () => {
   const [file, setFile] = useState<File | null>(null);

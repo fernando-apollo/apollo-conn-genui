@@ -3,8 +3,12 @@ import { OasGen } from 'apollo-oas';
 import 'rc-tree/assets/index.css';
 import { EventDataNode, Key } from 'rc-tree/lib/interface';
 import { useEffect, useState } from 'react';
-import { type IType, Composed, Union, Type, Ref } from 'apollo-oas/oas';
 import Tree from 'rc-tree';
+import { type IType } from 'apollo-oas/oas';
+import { Composed } from 'apollo-oas/oas';
+import { Union } from 'apollo-oas/oas';
+import { Type } from 'apollo-oas/oas';
+import { Ref } from 'apollo-oas/oas';
 
 interface ISpecTreeProps {
   parser: OasGen;

@@ -1,10 +1,11 @@
-import { FileChangeDetails } from '@zag-js/file-upload';
-import { MdOutlineUploadFile } from 'react-icons/md';
-import { FileUploadRoot, FileUploadTrigger } from '../ui/file-upload';
-import { Button } from '@chakra-ui/react';
+import {FileChangeDetails} from '@zag-js/file-upload';
+import {MdOutlineUploadFile} from 'react-icons/md';
+import {FileUploadRoot, FileUploadTrigger} from '../ui/file-upload';
+import {Button} from '@chakra-ui/react';
 
 interface ISpecChooserParams {
   onFileChange: (e: FileChangeDetails) => void;
+  currentFile?: string;
 }
 
 export const OASSpecChooser = (props: ISpecChooserParams) => (
@@ -14,7 +15,7 @@ export const OASSpecChooser = (props: ISpecChooserParams) => (
   >
     <FileUploadTrigger asChild>
       <Button size='sm'>
-        <MdOutlineUploadFile /> OAS specification
+        <MdOutlineUploadFile/> {props.currentFile ? props.currentFile : "OAS specification"}
       </Button>
     </FileUploadTrigger>
   </FileUploadRoot>

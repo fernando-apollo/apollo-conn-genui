@@ -1,5 +1,14 @@
 @import url('fonts.css');
 
+.split-view-view {
+    display: flex;
+}
+
+.rc-tree-title {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85em;
+    padding-left: 4px;
+}
 /* body {
   margin: 0;
   display: flex;

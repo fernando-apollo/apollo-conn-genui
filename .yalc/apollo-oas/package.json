@@ -1,6 +1,6 @@
 {
   "name": "apollo-oas",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Generates an Apollo Connector from an OpenAPI 3.x specification (YAML or JSON)",
   "author": "Fernando @ Apollo",
   "license": "MIT",
@@ -42,7 +42,8 @@
     "prepublishOnly": "npm run build && npm test && publint",
     "preversion": "npm run lint && npm test",
     "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "yalc:update": "yalc push --scripts --update --replace"
   },
   "dependencies": {
     "@inquirer/checkbox": "^4.1.1",
@@ -54,5 +55,5 @@
     "oas-normalize": "^12.1.0",
     "yoctocolors-cjs": "^2.1.2"
   },
-  "yalcSig": "4c28b3a8ba948b5b0b6b0a73cc7bd3ac"
+  "yalcSig": "c3b081876e35d2c72a8b59db5dc46e0e"
 }

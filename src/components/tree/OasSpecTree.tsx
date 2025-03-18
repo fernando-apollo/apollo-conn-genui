@@ -4,14 +4,16 @@ import 'rc-tree/assets/index.css';
 import { EventDataNode, Key } from 'rc-tree/lib/interface';
 import { useEffect, useState } from 'react';
 import Tree, { TreeNodeProps } from 'rc-tree';
-import { type IType } from 'apollo-conn-gen/oas';
-import { Composed } from 'apollo-conn-gen/oas';
-import { Union } from 'apollo-conn-gen/oas';
-import { Type } from 'apollo-conn-gen/oas';
-import { Ref } from 'apollo-conn-gen/oas';
-import { VscArrowSmallRight } from 'react-icons/vsc';
-// import { RxSwitch } from 'react-icons/rx';
-import { IoMdArrowDropdown, IoMdArrowDropright } from 'react-icons/io';
+import { IoMdReturnRight } from 'react-icons/io';
+import { FiFolderPlus } from 'react-icons/fi';
+import {
+  MdDataArray,
+  MdDataObject,
+  MdKeyboardArrowRight,
+} from 'react-icons/md';
+import { TbHttpGet } from 'react-icons/tb';
+import { FaArrowTurnDown } from 'react-icons/fa6';
+import { type IType, Composed, Union, Type, Ref } from 'apollo-conn-gen/oas';
 
 interface ISpecTreeProps {
   parser: OasGen;
@@ -224,6 +226,7 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
         .map((c) => c.key);
 
       onCheck({
+        // eslint-disable-next-line no-unsafe-optional-chaining
         checked: [...checkedKeys?.checked, ...keys!],
         halfChecked: checkedKeys.halfChecked,
       });
@@ -234,7 +237,7 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
   useEffect(() => {
     const paths: IType[] = Array.from(parser.paths.values());
     const data = paths.map((path: IType) => ({
-      title: path.forPrompt(parser.context!),
+      title: path.forPrompt(parser.context!).replace('[GET]', ''),
       key: path.path(),
       isLeaf: false,
       disableCheckbox: true,
@@ -244,16 +247,6 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
 
     setTreeData(data);
   }, [parser]);
-
-  const getIconFor = (data: TreeNodeProps) => {
-    if (!data.isLeaf)
-      return data.expanded ? (
-        <IoMdArrowDropright style={{ color: '#15252d' }} />
-      ) : (
-        <IoMdArrowDropdown style={{ color: '#15252d' }} />
-      );
-    else return <VscArrowSmallRight style={{ color: '#fc5200' }} />;
-  };
 
   return (
     <Tree
@@ -268,9 +261,33 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
       expandAction='click'
       showLine={true}
       onRightClick={selectAllScalars}
-      switcherIcon={(props: TreeNodeProps) => getIconFor(props)}
-      showIcon={false}
-      // icon={(_props: TreeNodeProps) => <RxSwitch />}
+      icon={(props: TreeNodeProps) => {
+        const path: string = (props.data?.key as string) ?? '';
+        if (!path) return;
+        if (!path.includes('>')) return <TbHttpGet color='rgb(0, 90, 175)' />;
+
+        const key = path.substring(path.lastIndexOf('>') + 1);
+        if (
+          key.startsWith('res:') ||
+          key.startsWith('prop:ref:') ||
+          key.startsWith('ref:')
+        )
+          return <IoMdReturnRight color='rgb(176, 57, 0)' />;
+
+        if (key.startsWith('obj:') || key.startsWith('comp:'))
+          return <MdDataObject color='rgb(123, 0, 199)' />;
+
+        if (key.startsWith('ref:') || key.startsWith('prop:ref:'))
+          return <FaArrowTurnDown color='rgb(176, 57, 0)' />;
+
+        if (props.isLeaf) return <MdKeyboardArrowRight color='red' />;
+
+        if (key.startsWith('array:') || key.startsWith('prop:array:'))
+          if (props.isLeaf) return <MdDataArray color='red' />;
+          else return <MdDataArray color='rgb(176, 57, 0)' />;
+
+        return <FiFolderPlus color='red' />;
+      }}
     />
   );
 };

@@ -1,13 +1,23 @@
-import { CardRoot, CardHeader, Heading, CardBody } from '@chakra-ui/react';
+import {
+  CardRoot,
+  CardHeader,
+  Heading,
+  CardBody,
+  Icon,
+  HStack,
+} from '@chakra-ui/react';
 import { Editor, Monaco } from '@monaco-editor/react';
 import { useTheme } from 'next-themes';
 import monaco from 'monaco-editor';
 import { useRef } from 'react';
+import { IoMdInformationCircleOutline } from 'react-icons/io';
+import { Tooltip } from '../ui/tooltip';
 
 type IEditorProps = {
   value: string;
   language: string;
   title: string;
+  info?: string;
   readOnly?: boolean;
   onEditorChange?: (value: string | undefined) => void;
 };
@@ -16,6 +26,7 @@ export const EditorWrapper = ({
   value,
   language = 'graphql',
   title,
+  info = '',
   readOnly = true,
   onEditorChange,
 }: IEditorProps) => {
@@ -32,7 +43,16 @@ export const EditorWrapper = ({
   return (
     <CardRoot size='sm' variant='outline' style={{ flex: 1 }} border='0'>
       <CardHeader p={2} m={0}>
-        <Heading size={'sm'}>{title}</Heading>
+        <HStack>
+          <Heading size={'sm'}>{title}</Heading>
+          {info && (
+            <Tooltip content={info} aria-label={info}>
+              <Icon size='md' color='gray.900'>
+                <IoMdInformationCircleOutline />
+              </Icon>
+            </Tooltip>
+          )}
+        </HStack>
       </CardHeader>
       <CardBody m={0} p={0}>
         <Editor

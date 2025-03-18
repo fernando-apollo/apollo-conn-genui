@@ -14,7 +14,13 @@ export const OASSpecChooser = (props: ISpecChooserParams) => (
     accept={['application/json', 'application/x-yaml']}
   >
     <FileUploadTrigger asChild>
-      <Button size='sm' colorPalette='brand' variant='solid'>
+      <Button
+        size='sm'
+        colorPalette='brand'
+        variant='solid'
+        bg='button.primary.bg'
+        color='button.primary.fg'
+      >
         <MdOutlineUploadFile />{' '}
         {props.currentFile ? props.currentFile : 'OAS specification'}
       </Button>

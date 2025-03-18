@@ -23,7 +23,13 @@ export const JsonFileChooser = ({
     flex='0'
   >
     <FileUploadTrigger asChild>
-      <Button variant='outline' size='sm'>
+      <Button
+        size='sm'
+        colorPalette='brand'
+        variant='solid'
+        bg='button.primary.bg'
+        color='button.primary.fg'
+      >
         <MdFileUpload /> {fileName ? fileName : 'JSON file'}
       </Button>
     </FileUploadTrigger>
@@ -48,7 +54,13 @@ export const JsonFolderChooser = (props: ISpecChooserParams) => {
     >
       <FileUploadHiddenInput />
       <FileUploadTrigger asChild>
-        <Button variant='outline' size='sm'>
+        <Button
+          size='sm'
+          colorPalette='brand'
+          variant='solid'
+          bg='button.primary.bg'
+          color='button.primary.fg'
+        >
           <MdDriveFolderUpload /> JSON folder
         </Button>
       </FileUploadTrigger>

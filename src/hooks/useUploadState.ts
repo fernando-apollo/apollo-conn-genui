@@ -1,6 +1,6 @@
-import { FileUploadFileChangeDetails } from '@chakra-ui/react';
-import { JsonGen } from 'apollo-conn-gen';
-import { useState } from 'react';
+import { FileUploadFileChangeDetails } from "@chakra-ui/react";
+import { JsonGen } from "apollo-conn-gen";
+import { useState } from "react";
 
 export type UploadedFile = {
   name: string;
@@ -61,7 +61,7 @@ export const useUploadState = () => {
 
     loadFilesSequentially(e.acceptedFiles)
       .then((files) => {
-        console.log('All files loaded sequentially:', files);
+        console.log("All files loaded sequentially:", files);
         // todo:
         // onChange(jsonGen.generateSchema());
         setFileName(files[0].name);
@@ -69,7 +69,7 @@ export const useUploadState = () => {
         setUploadedFiles(files);
       })
       .catch((error) => {
-        console.error('Error loading files:', error);
+        console.error("Error loading files:", error);
       });
   };
 

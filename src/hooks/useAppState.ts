@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { FileChangeDetails } from '@zag-js/file-upload';
-import { OasGen } from 'apollo-conn-gen';
+import { useState } from "react";
+import { FileChangeDetails } from "@zag-js/file-upload";
+import { OasGen } from "apollo-conn-gen";
 
 export const useAppState = () => {
   const [fileName, setFileName] = useState<string | undefined>();
   const [oasGen, setOasGen] = useState<OasGen | null>(null);
-  const [schema, setSchema] = useState('//hello');
+  const [schema, setSchema] = useState("");
 
   const handleOasFileChange: (e: FileChangeDetails) => void = (
-    e: FileChangeDetails
+    e: FileChangeDetails,
   ) => {
     const file = e.acceptedFiles[0];
     if (file) {
@@ -24,7 +24,7 @@ export const useAppState = () => {
         await gen.visit();
 
         setOasGen(gen);
-        setSchema('');
+        setSchema("");
       };
 
       reader.readAsText(file);

@@ -2,7 +2,7 @@
   "version": "v1",
   "packages": {
     "apollo-conn-gen": {
-      "signature": "978b51a3ee7ba7c860ffe80135897f73",
+      "signature": "4129c57cdabc9610543c38f74c1e84a6",
       "file": true
     }
   }

@@ -1,5 +1,5 @@
 import { FileUploadFileChangeDetails } from '@chakra-ui/react';
-import { JsonGen } from 'apollo-oas';
+import { JsonGen } from 'apollo-conn-gen';
 import { useState } from 'react';
 
 export type UploadedFile = {

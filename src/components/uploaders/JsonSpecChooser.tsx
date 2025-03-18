@@ -4,7 +4,7 @@ import {
   FileUploadRoot,
   FileUploadTrigger,
 } from '../ui/file-upload.tsx';
-import { Button, FileUploadHiddenInput, useFileUpload } from '@chakra-ui/react';
+import { Button, FileUploadHiddenInput } from '@chakra-ui/react';
 import { FileChangeDetails, FileRejectDetails } from '@zag-js/file-upload';
 import { MdDriveFolderUpload, MdFileUpload } from 'react-icons/md';
 

@@ -6,7 +6,6 @@ import {
   TabsList,
   TabsTrigger,
   TabsContent,
-  Flex,
 } from '@chakra-ui/react';
 
 import './App.css';

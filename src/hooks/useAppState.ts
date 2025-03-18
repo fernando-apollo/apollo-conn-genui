@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FileChangeDetails } from '@zag-js/file-upload';
-import { OasGen } from 'apollo-oas';
+import { OasGen } from 'apollo-conn-gen';
 
 export const useAppState = () => {
   const [fileName, setFileName] = useState<string | undefined>();

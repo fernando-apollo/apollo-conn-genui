@@ -1,14 +1,17 @@
-import { OasGen } from 'apollo-oas';
+import { OasGen } from 'apollo-conn-gen';
 
 import 'rc-tree/assets/index.css';
 import { EventDataNode, Key } from 'rc-tree/lib/interface';
 import { useEffect, useState } from 'react';
-import Tree from 'rc-tree';
-import { type IType } from 'apollo-oas/oas';
-import { Composed } from 'apollo-oas/oas';
-import { Union } from 'apollo-oas/oas';
-import { Type } from 'apollo-oas/oas';
-import { Ref } from 'apollo-oas/oas';
+import Tree, { TreeNodeProps } from 'rc-tree';
+import { type IType } from 'apollo-conn-gen/oas';
+import { Composed } from 'apollo-conn-gen/oas';
+import { Union } from 'apollo-conn-gen/oas';
+import { Type } from 'apollo-conn-gen/oas';
+import { Ref } from 'apollo-conn-gen/oas';
+import { VscArrowSmallRight } from 'react-icons/vsc';
+// import { RxSwitch } from 'react-icons/rx';
+import { IoMdArrowDropdown, IoMdArrowDropright } from 'react-icons/io';
 
 interface ISpecTreeProps {
   parser: OasGen;
@@ -155,11 +158,11 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
 
     let result: IType[] = [];
     if (!treeNode?.parent) {
-      const typeNode = parser.find(key, types);
-      result = expandType(typeNode);
+      const typeNode = findPath(key); // parser.find(key, types);
+      if (typeNode) result = expandType(typeNode as IType);
     } else {
-      const typeNode = parser.findPath(key); // findPath(key);
-      result = expandType(typeNode!);
+      const typeNode = findPath(key); // parser.findPath(key); // findPath(key);
+      if (typeNode) result = expandType(typeNode as IType);
     }
 
     const children = treeNode?.children?.map((c) => c.key) || [];
@@ -242,10 +245,19 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
     setTreeData(data);
   }, [parser]);
 
+  const getIconFor = (data: TreeNodeProps) => {
+    if (!data.isLeaf)
+      return data.expanded ? (
+        <IoMdArrowDropright style={{ color: '#15252d' }} />
+      ) : (
+        <IoMdArrowDropdown style={{ color: '#15252d' }} />
+      );
+    else return <VscArrowSmallRight style={{ color: '#fc5200' }} />;
+  };
+
   return (
     <Tree
       style={{ height: '100%' }}
-      // ref={treeRef}
       treeData={treeData}
       checkable
       checkedKeys={checkedKeys}
@@ -256,7 +268,9 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
       expandAction='click'
       showLine={true}
       onRightClick={selectAllScalars}
-      // loadedKeys={loadedKeys}
+      switcherIcon={(props: TreeNodeProps) => getIconFor(props)}
+      showIcon={false}
+      // icon={(_props: TreeNodeProps) => <RxSwitch />}
     />
   );
 };

@@ -12,7 +12,7 @@ import {
   JsonFolderChooser,
 } from '@/components/uploaders/JsonSpecChooser.tsx';
 import { JSX, useEffect, useState } from 'react';
-import { JsonGen } from 'apollo-oas';
+import { JsonGen } from 'apollo-conn-gen';
 import { EditorWrapper } from '@/components/editor/EditorWrapper.tsx';
 import { IoMdColorWand } from 'react-icons/io';
 import { Tooltip } from '@/components/ui/tooltip.tsx';
@@ -32,7 +32,7 @@ export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
     onFileChange,
     onFolderChange,
   } = useUploadState();
-  const [content, setContent] = useState<string>('');
+  const [content, setContent] = useState<string>('{}');
 
   useEffect(() => {
     console.log('>>>> uploadedFiles', uploadedFiles);
@@ -49,7 +49,13 @@ export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
     }
   }, [uploadedFiles, onChange, setFileName]);
 
-  const onGenerateSchema = () => {};
+  const onGenerateSchema = () => {
+    const walker = JsonGen.new();
+    walker.walkJson(content);
+    const generateSchema = walker.generateSchema();
+
+    onChange(generateSchema);
+  };
 
   const FileList = () => (
     <HStack overflowX='auto' overflowY='hidden'>
@@ -97,7 +103,7 @@ export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
                 size='xs'
                 variant='outline'
                 alignSelf='flex-end'
-                disabled={uploadedFiles.length === 0 && content === ''}
+                disabled={content === ''}
                 onClick={onGenerateSchema}
               >
                 <IoMdColorWand />
@@ -109,17 +115,18 @@ export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
 
       <CardBody m={0} pt={2}>
         {fileName && uploadedFiles.length > 0 && <FileList />}
-        {content && (
-          <EditorWrapper
-            title='Input JSON'
-            value={content}
-            language={'json'}
-            readOnly={false}
-            onEditorChange={(value) => {
+        <EditorWrapper
+          title='Input JSON'
+          value={content}
+          language={'json'}
+          readOnly={false}
+          onEditorChange={(value) => {
+            if (value) {
               console.log('value', value);
-            }}
-          />
-        )}
+              setContent(value);
+            }
+          }}
+        />
       </CardBody>
     </CardRoot>
   );

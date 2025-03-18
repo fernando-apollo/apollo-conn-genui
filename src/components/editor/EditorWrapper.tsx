@@ -9,7 +9,7 @@ type IEditorProps = {
   language: string;
   title: string;
   readOnly?: boolean;
-  onEditorChange: (value: string | undefined) => void;
+  onEditorChange?: (value: string | undefined) => void;
 };
 
 export const EditorWrapper = ({
@@ -40,7 +40,7 @@ export const EditorWrapper = ({
           theme={theme.resolvedTheme === 'dark' ? 'vs-dark' : 'light'}
           defaultLanguage={language}
           value={value}
-          onChange={onEditorChange}
+          onChange={onEditorChange ? onEditorChange : () => {}}
           options={{
             readOnly,
             lineNumbers: 'on',

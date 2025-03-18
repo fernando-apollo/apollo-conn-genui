@@ -1,8 +1,8 @@
 {
   "version": "v1",
   "packages": {
-    "apollo-oas": {
-      "signature": "c3b081876e35d2c72a8b59db5dc46e0e",
+    "apollo-conn-gen": {
+      "signature": "978b51a3ee7ba7c860ffe80135897f73",
       "file": true
     }
   }

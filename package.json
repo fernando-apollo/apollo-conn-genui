@@ -7,14 +7,14 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --host"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.12.0",
     "@emotion/react": "^11.14.0",
     "@monaco-editor/react": "^4.7.0",
     "allotment": "^1.20.3",
-    "apollo-oas": "file:.yalc/apollo-oas",
+    "apollo-conn-gen": "file:.yalc/apollo-conn-gen",
     "memfs": "^4.17.0",
     "next-themes": "^0.4.6",
     "rc-tree": "^5.13.1",

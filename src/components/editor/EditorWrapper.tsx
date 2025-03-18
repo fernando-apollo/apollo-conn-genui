@@ -52,6 +52,7 @@ export const EditorWrapper = ({
             minimap: { enabled: false },
             overviewRulerLanes: 0,
             fontFamily: 'Fira Code, monospace',
+            fontWeight: '500',
             fontSize: 13,
             renderLineHighlight: 'none',
             wordWrap: 'on',

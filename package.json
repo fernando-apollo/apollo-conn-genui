@@ -10,6 +10,8 @@
     "preview": "vite preview --host"
   },
   "dependencies": {
+    "@apollo/brand": "^0.7.0",
+    "@apollo/icons": "^0.6.1",
     "@chakra-ui/react": "^3.12.0",
     "@emotion/react": "^11.14.0",
     "@monaco-editor/react": "^4.7.0",

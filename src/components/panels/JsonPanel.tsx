@@ -99,9 +99,10 @@ export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
           <Box flex='1' display='flex' flexDirection='column'>
             <Tooltip content='Generate schema for files'>
               <IconButton
+                colorPalette='brand'
+                variant='solid'
                 aria-label='Generate schema for files'
                 size='xs'
-                variant='outline'
                 alignSelf='flex-end'
                 disabled={content === ''}
                 onClick={onGenerateSchema}

@@ -99,11 +99,11 @@ export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
           <JsonFileChooser onFileChange={onFileChange} />
           <JsonFolderChooser onFileChange={onFolderChange} />
           <Box flex='1' display='flex' flexDirection='column'>
-            <Tooltip content='Generate schema for files'>
+            <Tooltip content='Generate schema for contents'>
               <IconButton
                 colorPalette='gray'
                 variant='solid'
-                aria-label='Generate schema for files'
+                aria-label='Generate schema for contents'
                 bg='button.primary.bg'
                 color='button.primary.fg'
                 size='xs'
@@ -122,6 +122,7 @@ export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
         {fileName && uploadedFiles.length > 0 && <FileList />}
         <EditorWrapper
           title='Input JSON'
+          info="You can edit the contents below and click on the 'Generate schema for contents' button to re-generate the schema."
           value={content}
           language={'json'}
           readOnly={false}

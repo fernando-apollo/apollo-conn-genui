@@ -49,8 +49,8 @@ export const EditorWrapper = ({
 
   return (
     <CardRoot size='sm' variant='outline' style={{ flex: 1 }} border='0' ml={1}>
-      <CardHeader p={2} m={0} borderBottom={'1px solid'} borderColor='gray.200'>
-        <HStack alignItems='flex-end'>
+      <CardHeader pl={2} pt={2} pr={2} m={0} borderBottom={'1px solid'} borderColor='gray.200'>
+        <HStack alignItems='center'>
           <Heading size={'md'}>{title}</Heading>
           {info && (
             <Tooltip content={info} aria-label={info}>
@@ -62,7 +62,7 @@ export const EditorWrapper = ({
           <Box flex={1} />
           <ClipboardRoot value={value}>
             <ClipboardTrigger asChild>
-              <ClipboardIconButton size='xs' />
+              <ClipboardIconButton size='xs' m={1} p={0} />
             </ClipboardTrigger>
           </ClipboardRoot>
         </HStack>

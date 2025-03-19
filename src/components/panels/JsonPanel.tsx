@@ -155,13 +155,11 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
               // Try parsing the content to ensure it's valid JSON
               try {
                 JSON.parse(value);
-
                 // if we reached here, we have a valid JSON content
-                // setContent(value);
                 updateFileContent(fileName!, value);
                 onGenerateSchema();
               } catch (e) {
-                // console.warn('Invalid JSON content, using as-is', e);
+                // ignore
               }
             }
           }}

@@ -15,7 +15,6 @@ import { useRef } from 'react';
 import { IoMdInformationCircleOutline } from 'react-icons/io';
 import { Tooltip } from '../ui/tooltip';
 import {
-  ClipboardButton,
   ClipboardIconButton,
   ClipboardRoot,
 } from '../ui/clipboard';

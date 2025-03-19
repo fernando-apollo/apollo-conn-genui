@@ -19,7 +19,9 @@ import {Tooltip} from '@/components/ui/tooltip.tsx';
 import {Tag} from '@/components/ui/tag.tsx';
 import {UploadedFile, useUploadState} from '@/hooks/useUploadState';
 import _ from 'lodash'
-import {useMonaco} from "@monaco-editor/react";
+import {useDebounce} from "@/hooks/useDebounce.ts";
+import {MdHourglassBottom, MdOutlineWarningAmber} from "react-icons/md";
+import {FaRegCheckCircle} from "react-icons/fa";
 
 interface IJsonPanelProps {
   onChange: (schema: string) => void;
@@ -36,22 +38,26 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
 
   const [content, setContent] = useState<string>('{}');
   const [files, setFiles] = useState<UploadedFile[]>([]);
+  const [working, setWorking] = useState<boolean>(false);
+  const [invalidJson, setInvalidJson] = useState<boolean>(false);
 
-  const updateFileContent = (filename: string, newContent: string) => {
-    if (!filename) return;
+  const updateFileContent = (newContent: string) => {
+    console.log('[web] updateFileContent', fileName, 'newContent', newContent);
+    if (!fileName) return;
 
-    setFiles(prevFiles =>
-      prevFiles.map(file =>
-        file.name === filename ? {...file, content: newContent} : file
-      )
+    const newFiles: UploadedFile[] = files.map(file =>
+      file.name === fileName ? {...file, content: newContent} : file
     );
+
+    // debugger
+    setFiles(newFiles);
   };
 
   useEffect(() => {
     setContent('');
     setFiles([])
 
-    console.log('>>>> uploadedFiles', uploadedFiles);
+    console.log('[web] >>>> uploadedFiles', uploadedFiles);
 
     if (uploadedFiles.length > 0) {
       setFiles(_.cloneDeep(uploadedFiles));
@@ -69,6 +75,7 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
   const onGenerateSchema = () => {
     const walker = JsonGen.new();
     if (files.length > 0) {
+      console.log('[web] files', files);
       files.forEach((file) => walker.walkJson(file.content));
     } else {
       walker.walkJson(content);
@@ -77,6 +84,15 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
     const schema = walker.generateSchema();
     onChange(schema);
   };
+
+  const debouncedUpdate = useDebounce({
+    callback: () => {
+      console.log("[web] working", working);
+      onGenerateSchema();
+      setWorking(false);
+      console.log("[web] working", working);
+    }
+  });
 
   const FileList = () => (
     <HStack overflowX='auto' overflowY='hidden'>
@@ -119,7 +135,10 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
         <HStack display='flex'>
           <JsonFileChooser onFileChange={onFileChange}/>
           <JsonFolderChooser onFileChange={onFolderChange}/>
-          <Box flex='1' display='flex' flexDirection='column'>
+          <HStack flex='1' justifyContent='flex-end'>
+            {working && <MdHourglassBottom/>}
+            {invalidJson && <MdOutlineWarningAmber color='orange' />}
+            {!invalidJson && <FaRegCheckCircle color='green' />}
             <Tooltip content='Generate schema for contents'>
               <IconButton
                 colorPalette='gray'
@@ -129,13 +148,13 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
                 color='button.primary.fg'
                 size='xs'
                 alignSelf='flex-end'
-                disabled={content === ''}
+                disabled={working || invalidJson}
                 onClick={onGenerateSchema}
               >
                 <IoMdColorWand/>
               </IconButton>
-            </Tooltip>
-          </Box>
+            </Tooltip>          </HStack>
+
         </HStack>
       </CardHeader>
 
@@ -151,16 +170,18 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
           readOnly={false}
           onEditorChange={(value) => {
             if (value) {
-              console.log('value', value, 'filename', fileName);
-              // Try parsing the content to ensure it's valid JSON
+              // Try parsing the content to ensure it is valid JSON
               try {
                 JSON.parse(value);
                 // if we reached here, we have a valid JSON content
+                setInvalidJson(false);
+                setWorking(true);
                 setContent(value);
-                updateFileContent(fileName!, value);
-                onGenerateSchema();
+                updateFileContent(value);
+                debouncedUpdate();
               } catch (e) {
                 // ignore
+                setInvalidJson(true);
               }
             }
           }}

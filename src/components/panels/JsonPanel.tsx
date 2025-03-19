@@ -11,35 +11,52 @@ import {
   JsonFileChooser,
   JsonFolderChooser,
 } from '@/components/uploaders/JsonSpecChooser.tsx';
-import { JSX, useEffect, useState } from 'react';
-import { JsonGen } from 'apollo-conn-gen';
-import { EditorWrapper } from '@/components/editor/EditorWrapper.tsx';
-import { IoMdColorWand } from 'react-icons/io';
-import { Tooltip } from '@/components/ui/tooltip.tsx';
-import { Tag } from '@/components/ui/tag.tsx';
-import { useUploadState } from '@/hooks/useUploadState';
+import {JSX, useEffect, useState} from 'react';
+import {JsonGen} from 'apollo-conn-gen';
+import {EditorWrapper} from '@/components/editor/EditorWrapper.tsx';
+import {IoMdColorWand} from 'react-icons/io';
+import {Tooltip} from '@/components/ui/tooltip.tsx';
+import {Tag} from '@/components/ui/tag.tsx';
+import {UploadedFile, useUploadState} from '@/hooks/useUploadState';
+import _ from 'lodash'
+import {useMonaco} from "@monaco-editor/react";
 
 interface IJsonPanelProps {
   onChange: (schema: string) => void;
 }
 
-export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
+export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
   const {
     fileName,
     setFileName,
     uploadedFiles,
-    setUploadedFiles,
     onFileChange,
     onFolderChange,
   } = useUploadState();
+
   const [content, setContent] = useState<string>('{}');
+  const [files, setFiles] = useState<UploadedFile[]>([]);
+
+  const updateFileContent = (filename: string, newContent: string) => {
+    if (!filename) return;
+
+    setFiles(prevFiles =>
+      prevFiles.map(file =>
+        file.name === filename ? {...file, content: newContent} : file
+      )
+    );
+  };
 
   useEffect(() => {
+    setContent('');
+    setFiles([])
+
     console.log('>>>> uploadedFiles', uploadedFiles);
 
     if (uploadedFiles.length > 0) {
-      const walker = JsonGen.new();
+      setFiles(_.cloneDeep(uploadedFiles));
 
+      const walker = JsonGen.new();
       uploadedFiles.forEach((file) => walker.walkJson(file.content));
       const generateSchema = walker.generateSchema();
 
@@ -51,26 +68,30 @@ export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
 
   const onGenerateSchema = () => {
     const walker = JsonGen.new();
-    walker.walkJson(content);
-    const generateSchema = walker.generateSchema();
+    if (files.length > 0) {
+      files.forEach((file) => walker.walkJson(file.content));
+    } else {
+      walker.walkJson(content);
+    }
 
-    onChange(generateSchema);
+    const schema = walker.generateSchema();
+    onChange(schema);
   };
 
   const FileList = () => (
     <HStack overflowX='auto' overflowY='hidden'>
-      {uploadedFiles.map((processed, index) => {
+      {files.map((processed, index) => {
         return (
           <Tooltip content={processed.name} key={index}>
             <Tag
               cursor='pointer'
               colorPalette='brand'
               variant={fileName === processed.name ? 'solid' : 'outline'}
-              closable={uploadedFiles.length > 1}
+              closable={files.length > 1}
               size='lg'
               key={index}
               onClose={async () => {
-                setUploadedFiles(uploadedFiles.filter((_, i) => i !== index));
+                setFiles(files.filter((_, i) => i !== index));
               }}
               onClick={() => {
                 setFileName(processed.name);
@@ -90,14 +111,14 @@ export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
       className='json-panel-container'
       m={0}
       p={0}
-      style={{ flex: 1 }}
+      style={{flex: 1}}
       size='sm'
       border='0'
     >
-      <CardHeader>
+      <CardHeader m={0} p={2}>
         <HStack display='flex'>
-          <JsonFileChooser onFileChange={onFileChange} />
-          <JsonFolderChooser onFileChange={onFolderChange} />
+          <JsonFileChooser onFileChange={onFileChange}/>
+          <JsonFolderChooser onFileChange={onFolderChange}/>
           <Box flex='1' display='flex' flexDirection='column'>
             <Tooltip content='Generate schema for contents'>
               <IconButton
@@ -111,15 +132,17 @@ export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
                 disabled={content === ''}
                 onClick={onGenerateSchema}
               >
-                <IoMdColorWand />
+                <IoMdColorWand/>
               </IconButton>
             </Tooltip>
           </Box>
         </HStack>
       </CardHeader>
 
-      <CardBody m={0} pt={2}>
-        {fileName && uploadedFiles.length > 0 && <FileList />}
+      <CardBody m={0} p='0' pt={2}>
+        {fileName && files.length > 0 &&
+            <Box pl='2' pr='2'><FileList/></Box>
+        }
         <EditorWrapper
           title='Input JSON'
           info="You can edit the contents below and click on the 'Generate schema for contents' button to re-generate the schema."
@@ -128,8 +151,18 @@ export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
           readOnly={false}
           onEditorChange={(value) => {
             if (value) {
-              console.log('value', value);
-              setContent(value);
+              console.log('value', value, 'filename', fileName);
+              // Try parsing the content to ensure it's valid JSON
+              try {
+                JSON.parse(value);
+
+                // if we reached here, we have a valid JSON content
+                // setContent(value);
+                updateFileContent(fileName!, value);
+                onGenerateSchema();
+              } catch (e) {
+                // console.warn('Invalid JSON content, using as-is', e);
+              }
             }
           }}
         />

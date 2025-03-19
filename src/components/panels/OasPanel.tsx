@@ -20,12 +20,12 @@ export const OasPanel = ({ onChange }: IOasPanelProps) => {
       size='sm'
       border='0'
     >
-      <CardHeader>
+      <CardHeader m={0} p={2}>
         <Heading>
           <OASSpecChooser onFileChange={handleOasFileChange} />
         </Heading>
       </CardHeader>
-      <CardBody>
+      <CardBody m={0} p='2'>
         {oasGen && <OasSpecTree parser={oasGen} onChange={onChange} />}
       </CardBody>
     </CardRoot>

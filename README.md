@@ -8,7 +8,13 @@ This project provides a user interface for generating Apollo connectors from Ope
 - a JSON payload or a folder containing JSON payloads, and
 - a JSON editor to paste and edit payloads
 
+### Screenshots
+
+**OAS Spec**
 ![Apollo Connector Generator Screenshot](./docs/screenshot.png)
+
+**JSON folder (files are merged)**
+![Apollo Connector Generator Screenshot](./docs/screenshot-json.png)
 
 ## Getting Started
 
@@ -59,6 +65,12 @@ For `JSON` files or folders, the schema will be inferred from the uploaded paylo
 ## Limitations
 
 - the OAS parser only works with `GET` requests. Any other methods will be ignored. If you have a spec that contains other verbs such as `POST`, `PUT`, etc. you can still use the `JSON` generator and upload the payloads, as it will still help you accelerate your schema design.
+
+## To-dos
+
+- filter the spec tree by expression
+- support `*` selection (select all fields) - the library already supports it
+- support `POST`, `PUT`, etc. for OAS specs
 
 ## Contributing
 

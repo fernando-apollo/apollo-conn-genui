@@ -156,6 +156,7 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
               try {
                 JSON.parse(value);
                 // if we reached here, we have a valid JSON content
+                setContent(value);
                 updateFileContent(fileName!, value);
                 onGenerateSchema();
               } catch (e) {

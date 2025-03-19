@@ -63,6 +63,8 @@ export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
         return (
           <Tooltip content={processed.name} key={index}>
             <Tag
+              cursor='pointer'
+              colorPalette='brand'
               variant={fileName === processed.name ? 'solid' : 'outline'}
               closable={uploadedFiles.length > 1}
               size='lg'

@@ -5,6 +5,8 @@ import {
   CardBody,
   Icon,
   HStack,
+  Box,
+  ClipboardTrigger,
 } from '@chakra-ui/react';
 import { Editor, Monaco } from '@monaco-editor/react';
 import { useTheme } from 'next-themes';
@@ -12,6 +14,11 @@ import monaco from 'monaco-editor';
 import { useRef } from 'react';
 import { IoMdInformationCircleOutline } from 'react-icons/io';
 import { Tooltip } from '../ui/tooltip';
+import {
+  ClipboardButton,
+  ClipboardIconButton,
+  ClipboardRoot,
+} from '../ui/clipboard';
 
 type IEditorProps = {
   value: string;
@@ -41,10 +48,10 @@ export const EditorWrapper = ({
   }
 
   return (
-    <CardRoot size='sm' variant='outline' style={{ flex: 1 }} border='0'>
-      <CardHeader p={2} m={0}>
-        <HStack>
-          <Heading size={'sm'}>{title}</Heading>
+    <CardRoot size='sm' variant='outline' style={{ flex: 1 }} border='0' ml={1}>
+      <CardHeader p={2} m={0} borderBottom={'1px solid'} borderColor='gray.200'>
+        <HStack alignItems='flex-end'>
+          <Heading size={'md'}>{title}</Heading>
           {info && (
             <Tooltip content={info} aria-label={info}>
               <Icon size='md' color='gray.900'>
@@ -52,9 +59,15 @@ export const EditorWrapper = ({
               </Icon>
             </Tooltip>
           )}
+          <Box flex={1} />
+          <ClipboardRoot value={value}>
+            <ClipboardTrigger asChild>
+              <ClipboardIconButton size='xs' />
+            </ClipboardTrigger>
+          </ClipboardRoot>
         </HStack>
       </CardHeader>
-      <CardBody m={0} p={0}>
+      <CardBody m={0} p={0} pt={4}>
         <Editor
           onMount={handleEditorDidMount}
           theme={theme.resolvedTheme === 'dark' ? 'vs-dark' : 'light'}

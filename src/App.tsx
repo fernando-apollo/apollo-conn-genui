@@ -42,11 +42,12 @@ function App() {
         </Heading>
         <Box flex={1} />
         <IconButton
+          size='sm'
           onClick={toggleColorMode}
           colorPalette='gray'
           color={colorMode === 'dark' ? 'heading.bg' : 'heading.fg'}
         >
-          {colorMode === 'dark' ? <LuMoon /> : <LuSun />}
+          {colorMode === 'light' ? <LuMoon /> : <LuSun />}
         </IconButton>
       </HStack>
       <Allotment>
@@ -54,6 +55,8 @@ function App() {
           <TabsRoot
             defaultValue='oas'
             size='sm'
+            pt={3}
+            mr={1}
             style={{
               display: 'flex',
               flexDirection: 'column',

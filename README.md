@@ -8,6 +8,8 @@ This project provides a user interface for generating Apollo connectors from Ope
 - a JSON payload or a folder containing JSON payloads, and
 - a JSON editor to paste and edit payloads
 
+![Apollo Connector Generator Screenshot](./docs/screenshot.png)
+
 ## Getting Started
 
 ### Prerequisites

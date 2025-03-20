@@ -27,8 +27,8 @@ export const JsonFileChooser = ({
         size='sm'
         colorPalette='brand'
         variant='solid'
-        bg='button.primary.bg'
-        color='button.primary.fg'
+        // bg='button.primary.bg'
+        // color='button.primary.fg'
       >
         <MdFileUpload /> {fileName ? fileName : 'JSON file'}
       </Button>
@@ -58,8 +58,8 @@ export const JsonFolderChooser = (props: ISpecChooserParams) => {
           size='sm'
           colorPalette='brand'
           variant='solid'
-          bg='button.primary.bg'
-          color='button.primary.fg'
+          // bg='button.primary.bg'
+          // color='button.primary.fg'
         >
           <MdDriveFolderUpload /> JSON folder
         </Button>

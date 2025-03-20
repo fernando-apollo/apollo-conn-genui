@@ -1,16 +1,6 @@
-import {
-  Box,
-  CardBody,
-  CardHeader,
-  CardRoot,
-  HStack,
-  IconButton,
-} from '@chakra-ui/react';
+import {Box, CardBody, CardHeader, CardRoot, HStack, IconButton,} from '@chakra-ui/react';
 
-import {
-  JsonFileChooser,
-  JsonFolderChooser,
-} from '@/components/uploaders/JsonSpecChooser.tsx';
+import {JsonFileChooser, JsonFolderChooser,} from '@/components/uploaders/JsonSpecChooser.tsx';
 import {JSX, useEffect, useState} from 'react';
 import {JsonGen} from 'apollo-conn-gen';
 import {EditorWrapper} from '@/components/editor/EditorWrapper.tsx';
@@ -20,8 +10,7 @@ import {Tag} from '@/components/ui/tag.tsx';
 import {UploadedFile, useUploadState} from '@/hooks/useUploadState';
 import _ from 'lodash'
 import {useDebounce} from "@/hooks/useDebounce.ts";
-import {MdHourglassBottom, MdOutlineWarningAmber} from "react-icons/md";
-import {FaRegCheckCircle} from "react-icons/fa";
+import {MdHourglassBottom} from "react-icons/md";
 
 interface IJsonPanelProps {
   onChange: (schema: string) => void;
@@ -42,23 +31,13 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
   const [invalidJson, setInvalidJson] = useState<boolean>(false);
 
   const updateFileContent = (newContent: string) => {
-    console.log('[web] updateFileContent', fileName, 'newContent', newContent);
     if (!fileName) return;
-
-    const newFiles: UploadedFile[] = files.map(file =>
+    setFiles(files.map(file =>
       file.name === fileName ? {...file, content: newContent} : file
-    );
-
-    // debugger
-    setFiles(newFiles);
+    ));
   };
 
   useEffect(() => {
-    setContent('');
-    setFiles([])
-
-    console.log('[web] >>>> uploadedFiles', uploadedFiles);
-
     if (uploadedFiles.length > 0) {
       setFiles(_.cloneDeep(uploadedFiles));
 
@@ -72,10 +51,10 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
     }
   }, [uploadedFiles, onChange, setFileName]);
 
+  // this works with the cloned files, not the original uploaded files
   const onGenerateSchema = () => {
     const walker = JsonGen.new();
     if (files.length > 0) {
-      console.log('[web] files', files);
       files.forEach((file) => walker.walkJson(file.content));
     } else {
       walker.walkJson(content);
@@ -87,10 +66,8 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
 
   const debouncedUpdate = useDebounce({
     callback: () => {
-      console.log("[web] working", working);
       onGenerateSchema();
       setWorking(false);
-      console.log("[web] working", working);
     }
   });
 
@@ -106,9 +83,7 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
               closable={files.length > 1}
               size='lg'
               key={index}
-              onClose={async () => {
-                setFiles(files.filter((_, i) => i !== index));
-              }}
+              onClose={async () => setFiles(files.filter((_, i) => i !== index))}
               onClick={() => {
                 setFileName(processed.name);
                 setContent(processed.content);
@@ -137,15 +112,11 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
           <JsonFolderChooser onFileChange={onFolderChange}/>
           <HStack flex='1' justifyContent='flex-end'>
             {working && <MdHourglassBottom/>}
-            {invalidJson && <MdOutlineWarningAmber color='orange' />}
-            {!invalidJson && <FaRegCheckCircle color='green' />}
             <Tooltip content='Generate schema for contents'>
               <IconButton
-                colorPalette='gray'
+                colorPalette='brand'
                 variant='solid'
                 aria-label='Generate schema for contents'
-                bg='button.primary.bg'
-                color='button.primary.fg'
                 size='xs'
                 alignSelf='flex-end'
                 disabled={working || invalidJson}
@@ -153,8 +124,8 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
               >
                 <IoMdColorWand/>
               </IconButton>
-            </Tooltip>          </HStack>
-
+            </Tooltip>
+          </HStack>
         </HStack>
       </CardHeader>
 

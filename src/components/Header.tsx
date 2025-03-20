@@ -26,8 +26,8 @@ const Header: FC = () => {
       <IconButton
         size='sm'
         onClick={toggleColorMode}
-        colorPalette='gray'
-        color={colorMode === 'dark' ? 'heading.bg' : 'heading.fg'}
+        colorPalette='brand'
+        // color={colorMode === 'dark' ? 'heading.bg' : 'heading.fg'}
       >
         {colorMode === 'light' ? <LuMoon/> : <LuSun/>}
       </IconButton>

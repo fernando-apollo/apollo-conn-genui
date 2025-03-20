@@ -26,8 +26,9 @@ class Footer extends Component {
       <Box className='footer' fontFamily='p'>
         <Text textStyle='xs'>
           Built with ❤️ by the Solution Engineering Team @ Apollo &nbsp;
-          <Link
-            href='https://www.apollographql.com/docs/graphos/reference/feature-launch-stages#experimental'>(experimental)</Link>
+          (<Link
+          href='https://www.apollographql.com/docs/graphos/reference/feature-launch-stages#experimental'>experimental
+        </Link>)
         </Text>
       </Box>);
   }
@@ -57,6 +58,7 @@ function App() {
         <Allotment.Pane>
           <EditorWrapper
             value={schema}
+            showValidation={false}
             language={'graphql'}
             info='The connector schema will appear in the editor below'
             title={'Connector schema'}

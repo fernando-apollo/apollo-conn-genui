@@ -8,10 +8,10 @@ import {
   Box,
   ClipboardTrigger,
 } from '@chakra-ui/react';
-import {Editor, Monaco} from '@monaco-editor/react';
+import {Editor} from '@monaco-editor/react';
 import {useTheme} from 'next-themes';
-import monaco, {editor} from 'monaco-editor';
-import {useRef, useState} from 'react';
+import {editor} from 'monaco-editor';
+import {useState} from 'react';
 import {IoMdInformationCircleOutline} from 'react-icons/io';
 import {Tooltip} from '../ui/tooltip';
 import {

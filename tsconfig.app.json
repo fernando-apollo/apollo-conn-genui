@@ -25,7 +25,8 @@
     /* chakra config */
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src"]
 }

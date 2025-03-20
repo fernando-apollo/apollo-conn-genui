@@ -2,6 +2,8 @@
 
 This project provides a user interface for generating Apollo connectors from OpenAPI specifications. It simplifies the process of creating connectors by providing a visual tool to configure and generate the necessary code.
 
+This project the [apollo-conn-gen](https://github.com/fernando-apollo/apollo-conn-gen) library to generate the connector schema. If you are intending to convert specs or JSONs automatically then do check it out.
+
 ## Features
 
 - Upload OpenAPI specifications (YAML or JSON), or

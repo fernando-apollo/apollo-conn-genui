@@ -24,9 +24,9 @@ class Footer extends Component {
   render() {
     return (
       <Box className='footer' fontFamily='p'>
-        <Text textStyle='xs'>
+        <Text textStyle='xs' pb={1}>
           Built with ❤️ by the Solution Engineering Team @ Apollo &nbsp;
-          (<Link
+          (<Link target='_blank'
           href='https://www.apollographql.com/docs/graphos/reference/feature-launch-stages#experimental'>experimental
         </Link>)
         </Text>

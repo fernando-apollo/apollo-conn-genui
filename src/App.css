@@ -1,49 +1,54 @@
 
 #root {
-  display: flex;
-  height: 100dvh;
+    display: flex;
+    height: 100dvh;
 }
 
 .split-view-container {
-  display: flex;
+    display: flex;
 }
 
 .left-splitview-panel {
-  display: flex;
-  flex-grow: 1;
+    display: flex;
+    flex-grow: 1;
 }
 
 .main-tabs-panel {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: hidden;
 }
 
 .oas-tab-content {
-  flex-grow: 1;
-  display: flex;
-  overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    overflow-y: auto;
 }
 
 .json-tab-content {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
 .footer {
-  position: relative;
-  width: 100%;
-  text-align: right;
-  padding: 2px 8px 2px 8px;
+    position: relative;
+    width: 100%;
+    text-align: right;
+    padding: 3px 8px 3px 8px;
+    border-top: 1px solid #efefef;
 }
 
 .footer p {
-  width: 100%;
+    width: 100%;
 }
 
 .footer a {
-  text-decoration: underline;
+    text-decoration: underline;
+}
+
+.sash-vertical {
+    background-color: #efefef;
 }

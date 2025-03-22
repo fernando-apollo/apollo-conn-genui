@@ -14,6 +14,7 @@ import {
 import { TbHttpGet } from 'react-icons/tb';
 import { FaArrowTurnDown } from 'react-icons/fa6';
 import { type IType, Composed, Union, Type, Ref } from 'apollo-conn-gen/oas';
+import _ from 'lodash';
 
 interface ISpecTreeProps {
   parser: OasGen;
@@ -41,7 +42,6 @@ type TreeData = Node[];
 export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
   const [treeData, setTreeData] = useState<TreeData>([]);
   const types: IType[] = Array.from(parser.paths.values());
-  // const writer: Writer = new Writer(parser);
 
   const [checkedKeys, setCheckedKeys] = useState<CheckedProps>({
     checked: [],
@@ -110,7 +110,8 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
       title: item.forPrompt(parser.context!),
       key: item.path(),
       isLeaf: isScalarOrEnum,
-      disableCheckbox: !isScalarOrEnum,
+      // disableCheckbox: !isScalarOrEnum,
+      disableCheckbox: item.id.startsWith('res:'),
       parent: root,
       className: isScalarOrEnum ? 'container-node' : 'leaf-node',
     };
@@ -187,16 +188,38 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
     await undefined;
   };
 
+  const convert = (p: string): string => {
+    // get last path
+    const last = p.substring(p.lastIndexOf('>') + 1);
+    return '';
+  };
+
   const onCheck = (values: Key[] | CheckedProps): void => {
     const set = new Set<string>();
+    console.log('[web] onCheck', typeof values, values);
 
     // add all the parent nodes from the checked nodes
     // needed for the backend to generate the answers
     // TODO:
     if (typeof values === 'object') {
       const checkedProps: CheckedProps = values as CheckedProps;
+
+      // do we have a GET node?
+      const gets = checkedProps.checked.map((p) => convert(p as string));
+
+      checkedProps.checked
+        .map((p) => findNode(treeData, p as string))
+        .forEach((n: Node | undefined) => {
+          set.add(n?.key as string);
+
+          let p = n;
+          while ((p = p?.parent)) {
+            set.add(p.key);
+          }
+        });
+
       setCheckedKeys({
-        checked: [...checkedProps.checked, ...set],
+        checked: [...set],
         halfChecked: checkedProps.halfChecked,
       });
 
@@ -204,6 +227,7 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
 
       // reset generated state
       parser.context?.generatedSet.clear();
+      console.log('paths', paths);
       onChange(parser.generateSchema(paths));
     }
   };
@@ -240,16 +264,21 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
       title: path.forPrompt(parser.context!).replace('[GET]', ''),
       key: path.path(),
       isLeaf: false,
-      disableCheckbox: true,
+      // disableCheckbox: true,
       parent: undefined,
       className: 'container-node',
     }));
 
     setTreeData(data);
+    setCheckedKeys({
+      checked: [],
+      halfChecked: [],
+    });
   }, [parser]);
 
   return (
     <Tree
+      key={parser.title()}
       style={{ height: '100%' }}
       treeData={treeData}
       checkable
@@ -260,6 +289,10 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
       checkStrictly={true}
       expandAction='click'
       showLine={true}
+      // filterTreeNode={(node: Node) => {
+      //   console.log('filter', node.key);
+      //   return !node.disableCheckbox;
+      // }}
       onRightClick={selectAllScalars}
       icon={(props: TreeNodeProps) => {
         const path: string = (props.data?.key as string) ?? '';

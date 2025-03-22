@@ -1,7 +1,15 @@
-import { CardRoot, CardHeader, Heading, CardBody } from '@chakra-ui/react';
+import {
+  CardRoot,
+  CardHeader,
+  Heading,
+  CardBody,
+  HStack,
+  Box,
+} from '@chakra-ui/react';
 import { useAppState } from '@/hooks/useAppState.ts';
 import { OASSpecChooser } from '@/components/uploaders/OASSpecChooser.tsx';
 import { OasSpecTree } from '@/components/tree/OasSpecTree.tsx';
+import { useEffect } from 'react';
 
 interface IOasPanelProps {
   onChange: (schema: string) => void;
@@ -9,6 +17,11 @@ interface IOasPanelProps {
 
 export const OasPanel = ({ onChange }: IOasPanelProps) => {
   const { oasGen, handleOasFileChange } = useAppState();
+
+  useEffect(() => {
+    console.log('spec changed', oasGen?.title());
+    onChange('');
+  }, [oasGen, onChange]);
 
   return (
     // TODO: change this for VSTack
@@ -21,9 +34,14 @@ export const OasPanel = ({ onChange }: IOasPanelProps) => {
       border='0'
     >
       <CardHeader m={0} p={2}>
-        <Heading>
+        <HStack justifyContent='space-between'>
+          {oasGen && (
+            <Heading size='sm' flex='1'>
+              {oasGen.title()} - {oasGen.version()}
+            </Heading>
+          )}
           <OASSpecChooser onFileChange={handleOasFileChange} />
-        </Heading>
+        </HStack>
       </CardHeader>
       <CardBody m={0} p='2'>
         {oasGen && <OasSpecTree parser={oasGen} onChange={onChange} />}

@@ -10,6 +10,7 @@ interface ISpecChooserParams {
 
 export const OASSpecChooser = (props: ISpecChooserParams) => (
   <FileUploadRoot
+    style={{ flex: '0' }}
     onFileChange={props.onFileChange}
     accept={['application/json', 'application/x-yaml']}
   >

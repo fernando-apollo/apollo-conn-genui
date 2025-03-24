@@ -13,6 +13,11 @@
     flex-grow: 1;
 }
 
+.bottom-splitview-panel {
+    display: flex;
+    flex-direction: column;
+}
+
 .main-tabs-panel {
     display: flex;
     flex-direction: column;
@@ -50,5 +55,9 @@
 }
 
 .sash-vertical {
+    background-color: #efefef;
+}
+
+.sash-horizontal {
     background-color: #efefef;
 }

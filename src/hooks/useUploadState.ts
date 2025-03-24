@@ -61,7 +61,7 @@ export const useUploadState = () => {
 
     loadFilesSequentially(e.acceptedFiles)
       .then((files) => {
-        console.log("All files loaded sequentially:", files);
+        console.log("[web] All files loaded sequentially:", files);
         // todo:
         // onChange(jsonGen.generateSchema());
         setFileName(files[0].name);

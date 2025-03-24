@@ -1,9 +1,10 @@
-/*
-import { useState } from "react";
-import { FileChangeDetails } from "@zag-js/file-upload";
-import { OasGen } from "apollo-conn-gen";
+import {ReactNode, useState} from 'react';
+import {OasGen} from "apollo-conn-gen";
+import {FileChangeDetails} from "@zag-js/file-upload";
+import { AppContext } from '../context/appContext.ts';
 
-export const useAppState = () => {
+
+export const AppStateProvider = ({children}: { children: ReactNode }) => {
   const [fileName, setFileName] = useState<string | undefined>();
   const [oasGen, setOasGen] = useState<OasGen | null>(null);
   const [schema, setSchema] = useState("");
@@ -32,12 +33,10 @@ export const useAppState = () => {
     }
   };
 
-  return {
-    oasGen,
-    handleOasFileChange,
-    fileName,
-    schema,
-    setSchema,
-  };
+  return (
+    <AppContext.Provider value={{schema, setSchema, oasGen, handleOasFileChange, fileName, setFileName}}>
+      {children}
+    </AppContext.Provider>
+  );
 };
-*/
+

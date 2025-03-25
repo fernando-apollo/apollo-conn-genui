@@ -1,7 +1,7 @@
 import { OasGen } from 'apollo-conn-gen';
 
 import 'rc-tree/assets/index.css';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Tree, { TreeNodeProps } from 'rc-tree';
 import { IoMdReturnRight } from 'react-icons/io';
 import { FiFolderPlus } from 'react-icons/fi';
@@ -9,16 +9,30 @@ import {
   MdDataArray,
   MdDataObject,
   MdKeyboardArrowRight,
+  MdOutlineSearch,
 } from 'react-icons/md';
 import { TbHttpGet } from 'react-icons/tb';
 import { FaArrowTurnDown } from 'react-icons/fa6';
 import { type IType } from 'apollo-conn-gen/oas';
 import { useOasTree } from '@/hooks/useOasTree.ts';
+import { createListCollection, HStack, Input, VStack } from '@chakra-ui/react';
+import { InputGroup } from '../ui/input-group';
+import { CloseButton } from '../ui/close-button';
+import { NativeSelectField, NativeSelectRoot } from '../ui/native-select';
+import _ from 'lodash';
+import { useDebounce } from '@/hooks/useDebounce';
 
 export interface ISpecTreeProps {
   parser: OasGen;
   onChange: (paths: string[], schema: string) => void;
 }
+
+const examples = createListCollection({
+  items: [
+    { label: "Contains 'Id' (ignores case)", value: '.*[iI][dD]}' },
+    { label: "Ending with 'Id' (ignores case)", value: '.*[iI][dD]}$' },
+  ],
+});
 
 export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
   const {
@@ -31,9 +45,19 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
     selectAllScalars,
   } = useOasTree(parser, onChange);
 
-  // set initial state
-  useEffect(() => {
-    const paths: IType[] = Array.from(parser.paths.values());
+  const [filter, setFilter] = useState<string>('');
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const loadPaths = () => {
+    let paths: IType[] = Array.from(parser.paths.values());
+
+    if (filter && filter.length > 0) {
+      const regexp = new RegExp(filter, 'ig');
+      paths = paths.filter((path: IType) =>
+        regexp.test(path.forPrompt(parser.context!))
+      );
+    }
+
     const data = paths.map((path: IType) => ({
       title: path.forPrompt(parser.context!).replace('[GET]', ''),
       key: path.path(),
@@ -48,28 +72,74 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
       checked: [],
       halfChecked: [],
     });
+  };
+
+  // set initial state
+  useEffect(() => {
+    loadPaths();
   }, [parser]);
 
+  const debouncedSearch = useDebounce({
+    callback: () => loadPaths(),
+  });
+
   return (
-    <Tree
-      key={parser.title()}
-      style={{ height: '100%' }}
-      treeData={treeData}
-      checkable
-      checkedKeys={checkedKeys}
-      selectable={false}
-      loadData={onLoadData}
-      onCheck={onCheck}
-      checkStrictly={true}
-      expandAction='click'
-      showLine={true}
-      /*filterTreeNode={(node: EventDataNode<Node>): boolean => {
-                console.log('filter', node.key);
-                return !node.disableCheckbox;
-            }}*/
-      onRightClick={selectAllScalars}
-      icon={getIcon}
-    />
+    <VStack alignItems='stretch'>
+      <HStack>
+        <InputGroup
+          flex={2}
+          startElement={<MdOutlineSearch />}
+          endElement={
+            <CloseButton
+              size='xs'
+              onClick={() => {
+                setFilter('');
+                inputRef.current?.focus();
+                debouncedSearch();
+              }}
+              me='-2'
+            />
+          }
+        >
+          <Input
+            size='xs'
+            placeholder='Enter a regexp to filter the path list'
+            onChange={(e) => {
+              setFilter(e.target.value);
+              debouncedSearch();
+            }}
+            value={filter}
+            ref={inputRef}
+            fontFamily='Fira Code'
+          />
+        </InputGroup>
+        <NativeSelectRoot size='sm' flex='1'>
+          <NativeSelectField
+            placeholder='Examples...'
+            items={examples.items}
+            onChange={(e) => {
+              setFilter(e.target.value);
+              debouncedSearch();
+            }}
+          />
+        </NativeSelectRoot>
+      </HStack>
+      <Tree
+        key={parser.title()}
+        style={{ height: '100%' }}
+        treeData={treeData}
+        checkable
+        checkedKeys={checkedKeys}
+        selectable={false}
+        loadData={onLoadData}
+        onCheck={onCheck}
+        checkStrictly={true}
+        expandAction='click'
+        showLine={true}
+        onRightClick={selectAllScalars}
+        icon={getIcon}
+      />
+    </VStack>
   );
 };
 

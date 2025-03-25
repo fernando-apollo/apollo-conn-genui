@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef} from "react";
+import { useEffect, useMemo, useRef } from "react";
 import _ from "lodash";
 
 interface IDebounceCallback {

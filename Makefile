@@ -1,9 +1,4 @@
-PORT=8080
-PROJECT_ID=fernando-generic-poc
-APP_NAME=conn-webui
-REPO_NAME=conn-webui-repository
-LOCATION=us-central1
-TAG=v1.3
+include .production.env
 
 publish:
 	gcloud builds submit --tag ${LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${APP_NAME}:${TAG}

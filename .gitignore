@@ -25,4 +25,4 @@ dist-ssr
 .yalc
 .deploy.md
 
-Makefile
+.production.env

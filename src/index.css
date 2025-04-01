@@ -30,3 +30,11 @@ span.rc-tree-checkbox.rc-tree-checkbox-disabled {
   align-items: center;
   justify-content: start;
 }
+
+.rc-tree-node-content-wrapper {
+  overflow: none;
+}
+
+.rc-tree-iconEle {
+  min-width: 24px;
+}

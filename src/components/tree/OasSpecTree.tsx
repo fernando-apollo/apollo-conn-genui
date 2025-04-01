@@ -3,7 +3,7 @@ import { OasGen } from 'apollo-conn-gen';
 import 'rc-tree/assets/index.css';
 import { useEffect, useRef, useState } from 'react';
 import Tree, { TreeNodeProps } from 'rc-tree';
-import { IoMdReturnRight } from 'react-icons/io';
+import { IoMdReturnLeft, IoMdReturnRight } from 'react-icons/io';
 import { FiFolderPlus } from 'react-icons/fi';
 import {
   MdDataArray,
@@ -11,7 +11,7 @@ import {
   MdKeyboardArrowRight,
   MdOutlineSearch,
 } from 'react-icons/md';
-import { TbHttpGet } from 'react-icons/tb';
+import { TbHttpGet, TbHttpPost } from 'react-icons/tb';
 import { FaArrowTurnDown } from 'react-icons/fa6';
 import { type IType } from 'apollo-conn-gen/oas';
 import { useOasTree } from '@/hooks/useOasTree.ts';
@@ -58,14 +58,21 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
       );
     }
 
-    const data = paths.map((path: IType) => ({
-      title: path.forPrompt(parser.context!).replace('[GET]', ''),
-      key: path.path(),
-      isLeaf: false,
-      disableCheckbox: false,
-      parent: undefined,
-      className: 'container-node',
-    }));
+    const data = paths.map((path: IType) => {
+      return {
+        title: _.truncate(
+          path.forPrompt(parser.context!).replace(/\[(GET|POST)\]/i, ''),
+          {
+            length: 40,
+          }
+        ),
+        key: path.path(),
+        isLeaf: false,
+        disableCheckbox: false,
+        parent: undefined,
+        className: 'container-node',
+      };
+    });
 
     setTreeData(data);
     setCheckedKeys({
@@ -146,17 +153,27 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
 const getIcon = (props: TreeNodeProps) => {
   const path: string = (props.data?.key as string) ?? '';
   if (!path) return;
-  if (!path.includes('>')) return <TbHttpGet color='rgb(0, 90, 175)' />;
+
+  if (path.startsWith('get:') && !path.includes('>'))
+    return <TbHttpGet color='rgb(0, 90, 175)' />;
+
+  if (path.startsWith('post:') && !path.includes('>'))
+    return <TbHttpPost color='rgb(175, 90, 0)' />;
 
   const key = path.substring(path.lastIndexOf('>') + 1);
-  if (
-    key.startsWith('res:') ||
-    key.startsWith('prop:ref:') ||
-    key.startsWith('ref:')
-  )
+  if (key.startsWith('prop:ref:') || key.startsWith('ref:'))
     return <IoMdReturnRight color='rgb(176, 57, 0)' />;
 
-  if (key.startsWith('obj:') || key.startsWith('comp:'))
+  if (key.startsWith('res:')) return <IoMdReturnLeft color='rgb(176, 57, 0)' />;
+
+  if (key.startsWith('body:'))
+    return <IoMdReturnRight color='rgb(176, 57, 0)' />;
+
+  if (
+    key.startsWith('obj:') ||
+    key.startsWith('comp:') ||
+    key.startsWith('union:')
+  )
     return <MdDataObject color='rgb(123, 0, 199)' />;
 
   if (key.startsWith('ref:') || key.startsWith('prop:ref:'))

@@ -139,7 +139,9 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
         checkedKeys={checkedKeys}
         selectable={false}
         loadData={onLoadData}
-        onCheck={onCheck}
+        onCheck={(checked, info) =>
+          onCheck(checked, info as unknown as React.MouseEvent)
+        }
         checkStrictly={true}
         expandAction='click'
         showLine={true}

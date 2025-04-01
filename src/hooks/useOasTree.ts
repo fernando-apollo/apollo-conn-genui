@@ -158,7 +158,7 @@ export function useOasTree(
 
   const onCheck = (
     values: Key[] | CheckedProps,
-    eventObj: React.MouseEvent
+    eventObj?: React.MouseEvent
   ): void => {
     const set = new Set<string>(selectedPaths);
 
@@ -269,11 +269,14 @@ export function useOasTree(
         ?.filter((n: Node) => getId(n.key as string).startsWith('prop:scalar'))
         .map((c) => c.key);
 
-      onCheck({
-        // eslint-disable-next-line no-unsafe-optional-chaining
-        checked: [...checkedKeys?.checked, ...keys!],
-        halfChecked: checkedKeys.halfChecked,
-      });
+      onCheck(
+        {
+          // eslint-disable-next-line no-unsafe-optional-chaining
+          checked: [...checkedKeys?.checked, ...keys!],
+          halfChecked: checkedKeys.halfChecked,
+        },
+        undefined as unknown as React.MouseEvent
+      );
     }
   };
 

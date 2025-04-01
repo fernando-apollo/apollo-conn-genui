@@ -63,7 +63,7 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
         title: _.truncate(
           path.forPrompt(parser.context!).replace(/\[(GET|POST)\]/i, ''),
           {
-            length: 40,
+            length: 80,
           }
         ),
         key: path.path(),

@@ -38,3 +38,11 @@ span.rc-tree-checkbox.rc-tree-checkbox-disabled {
 .rc-tree-iconEle {
   min-width: 24px;
 }
+
+.rc-tree-switcher {
+  min-width: 16px;
+}
+
+span.rc-tree-checkbox {
+  min-width: 12px;
+}

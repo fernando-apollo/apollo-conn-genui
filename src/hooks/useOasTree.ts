@@ -106,12 +106,15 @@ export function useOasTree(
     // get all paths (without the expansion wildcard)
     const paths = selectedPaths.map((p) => p.split('>')[0]);
     const op = item.path().split('>')[0];
+    console.log('[web] op', op, 'paths', paths, 'selectedPaths', selectedPaths);
+
+    // debugger;
 
     return {
       title: item.forPrompt(parser.context!),
       key: item.path(),
       isLeaf: isScalarOrEnum,
-      disableCheckbox: !isScalarOrEnum || paths.includes(op),
+      disableCheckbox: !isScalarOrEnum || selectedPaths.includes(op),
       parent: root,
       className: isScalarOrEnum ? 'container-node' : 'leaf-node',
     };
@@ -153,8 +156,23 @@ export function useOasTree(
     return current;
   };
 
-  const onCheck = (values: Key[] | CheckedProps): void => {
+  const onCheck = (
+    values: Key[] | CheckedProps,
+    eventObj: React.MouseEvent
+  ): void => {
     const set = new Set<string>(selectedPaths);
+
+    const eventClass =
+      (_.get(
+        eventObj?.nativeEvent?.target,
+        'className'
+      ) as unknown as string) ?? '';
+
+    const eventNode = _.get(eventObj, 'node') as unknown as Node;
+
+    if (eventClass.includes('rc-tree-title') && !eventNode.parent) {
+      return;
+    }
 
     // add all the parent nodes from the checked nodes
     // needed for the backend to generate the answers

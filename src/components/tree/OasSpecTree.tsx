@@ -1,7 +1,7 @@
 import { OasGen } from 'apollo-conn-gen';
 
 import 'rc-tree/assets/index.css';
-import { useEffect, useRef, useState } from 'react';
+import { Key, useEffect, useRef, useState } from 'react';
 import Tree, { TreeNodeProps } from 'rc-tree';
 import { IoMdReturnLeft, IoMdReturnRight } from 'react-icons/io';
 import { FiFolderPlus } from 'react-icons/fi';
@@ -47,6 +47,7 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
 
   const [filter, setFilter] = useState<string>('');
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [expandedKeys, setExpandedKeys] = useState<Key[]>([]);
 
   const loadPaths = () => {
     let paths: IType[] = Array.from(parser.paths.values());
@@ -75,6 +76,7 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
     });
 
     setTreeData(data);
+    // setExpandedKeys([]);
     setCheckedKeys({
       checked: [],
       halfChecked: [],
@@ -83,11 +85,15 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
 
   // set initial state
   useEffect(() => {
+    // setExpandedKeys([]);
     loadPaths();
   }, [parser]);
 
   const debouncedSearch = useDebounce({
-    callback: () => loadPaths(),
+    callback: () => {
+      console.log('[web] expandedKeys', expandedKeys);
+      return loadPaths();
+    },
   });
 
   return (
@@ -125,6 +131,7 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
             placeholder='Examples...'
             items={examples.items}
             onChange={(e) => {
+              // setExpandedKeys([]);
               setFilter(e.target.value);
               debouncedSearch();
             }}
@@ -132,21 +139,28 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
         </NativeSelectRoot>
       </HStack>
       <Tree
-        key={parser.title()}
+        key={parser.title() + treeData.length}
         style={{ height: '100%' }}
         treeData={treeData}
         checkable
         checkedKeys={checkedKeys}
+        expandedKeys={expandedKeys}
         selectable={false}
         loadData={onLoadData}
-        onCheck={(checked, info) =>
-          onCheck(checked, info as unknown as React.MouseEvent)
-        }
         checkStrictly={true}
         expandAction='click'
         showLine={true}
         onRightClick={selectAllScalars}
         icon={getIcon}
+        defaultExpandedKeys={expandedKeys}
+        defaultCheckedKeys={checkedKeys?.checked}
+        onExpand={setExpandedKeys}
+        defaultExpandAll={true}
+        defaultExpandParent={true}
+        autoExpandParent={true}
+        onCheck={(checked, info) =>
+          onCheck(checked, info as unknown as React.MouseEvent)
+        }
       />
     </VStack>
   );

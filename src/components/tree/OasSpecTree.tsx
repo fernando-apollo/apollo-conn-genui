@@ -11,7 +11,13 @@ import {
   MdKeyboardArrowRight,
   MdOutlineSearch,
 } from 'react-icons/md';
-import { TbHttpGet, TbHttpPost } from 'react-icons/tb';
+import {
+  TbHttpDelete,
+  TbHttpGet,
+  TbHttpPatch,
+  TbHttpPost,
+  TbHttpPut,
+} from 'react-icons/tb';
 import { FaArrowTurnDown } from 'react-icons/fa6';
 import { type IType } from 'apollo-conn-gen/oas';
 import { useOasTree } from '@/hooks/useOasTree.ts';
@@ -62,7 +68,9 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
     const data = paths.map((path: IType) => {
       return {
         title: _.truncate(
-          path.forPrompt(parser.context!).replace(/\[(GET|POST)\]/i, ''),
+          path
+            .forPrompt(parser.context!)
+            .replace(/\[(GET|POST|PUT|PATCH|DELETE)\]/i, ''),
           {
             length: 80,
           }
@@ -171,10 +179,19 @@ const getIcon = (props: TreeNodeProps) => {
   if (!path) return;
 
   if (path.startsWith('get:') && !path.includes('>'))
-    return <TbHttpGet color='rgb(0, 90, 175)' />;
+    return <TbHttpGet color='#61affe' />;
 
   if (path.startsWith('post:') && !path.includes('>'))
-    return <TbHttpPost color='rgb(175, 90, 0)' />;
+    return <TbHttpPost color='#49cc90' />;
+
+  if (path.startsWith('put:') && !path.includes('>'))
+    return <TbHttpPut color='#fca130' />;
+
+  if (path.startsWith('patch:') && !path.includes('>'))
+    return <TbHttpPatch color='rgb(175, 90, 0)' />;
+
+  if (path.startsWith('del:') && !path.includes('>'))
+    return <TbHttpDelete color='#f93e3e' />;
 
   const key = path.substring(path.lastIndexOf('>') + 1);
   if (key.startsWith('prop:ref:') || key.startsWith('ref:'))

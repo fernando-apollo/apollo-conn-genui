@@ -4,7 +4,7 @@ import 'rc-tree/assets/index.css';
 import { Key, useEffect, useRef, useState } from 'react';
 import Tree, { TreeNodeProps } from 'rc-tree';
 import { IoMdReturnLeft, IoMdReturnRight } from 'react-icons/io';
-import { FiFolderPlus } from 'react-icons/fi';
+
 import {
   MdCircle,
   MdDataArray,
@@ -20,7 +20,7 @@ import {
   TbHttpPost,
   TbHttpPut,
 } from 'react-icons/tb';
-import { FaArrowTurnDown, FaCircleDot } from 'react-icons/fa6';
+import { FaArrowTurnDown } from 'react-icons/fa6';
 import { type IType } from 'apollo-conn-gen/oas';
 import { useOasTree } from '@/hooks/useOasTree.ts';
 import { createListCollection, HStack, Input, VStack } from '@chakra-ui/react';

@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Composed, IType, Ref, Type, Union } from "apollo-conn-gen/oas";
-import { OasGen } from "apollo-conn-gen";
-import { EventDataNode, Key } from "rc-tree/lib/interface";
-import _ from "lodash";
+import { useState } from 'react';
+import { Composed, IType, Ref, Type, Union } from 'apollo-conn-gen/oas';
+import { OasGen } from 'apollo-conn-gen';
+import { EventDataNode, Key } from 'rc-tree/lib/interface';
+import _ from 'lodash';
 
 export type TreeData = Node[];
 
@@ -24,7 +24,7 @@ export type Node = {
 
 export function useOasTree(
   parser: OasGen,
-  onChange: (paths: string[], schema: string) => void,
+  onChange: (paths: string[], schema: string) => void
 ) {
   const types: IType[] = Array.from(parser.paths.values());
 
@@ -80,7 +80,7 @@ export function useOasTree(
 
   const findNode = (
     items: Node[] | undefined,
-    key: string,
+    key: string
   ): Node | undefined => {
     if (!items) {
       return;
@@ -100,23 +100,25 @@ export function useOasTree(
   };
 
   const createNode = (item: IType, root: Node | undefined): Node => {
-    const isScalarOrEnum =
-      item.id.startsWith("prop:scalar") || item.id.startsWith("enum:");
+    const isLeaf =
+      item.id.startsWith('scalar:') ||
+      item.id.startsWith('prop:scalar') ||
+      item.id.startsWith('enum:');
 
     // get all paths (without the expansion wildcard)
-    const paths = selectedPaths.map((p) => p.split(">")[0]);
-    const op = item.path().split(">")[0];
-    console.log("[web] op", op, "paths", paths, "selectedPaths", selectedPaths);
+    const paths = selectedPaths.map((p) => p.split('>')[0]);
+    const op = item.path().split('>')[0];
+    console.log('[web] op', op, 'paths', paths, 'selectedPaths', selectedPaths);
 
     // debugger;
 
     return {
       title: item.forPrompt(parser.context!),
       key: item.path(),
-      isLeaf: isScalarOrEnum,
-      disableCheckbox: !isScalarOrEnum || selectedPaths.includes(op),
+      isLeaf,
+      disableCheckbox: !isLeaf || selectedPaths.includes(op),
       parent: root,
-      className: isScalarOrEnum ? "container-node" : "leaf-node",
+      className: isLeaf ? 'container-node' : 'leaf-node',
     };
   };
 
@@ -126,18 +128,18 @@ export function useOasTree(
     let last: IType | undefined;
 
     let i = 0;
-    const parts = path.split(">");
+    const parts = path.split('>');
     do {
-      const part = parts[i].replace(/#\/c\/s/g, "#/components/schemas");
+      const part = parts[i].replace(/#\/c\/s/g, '#/components/schemas');
       current = collection.find((t) => t.id === part);
       if (!current) {
         throw new Error(
-          "Could not find type: " +
+          'Could not find type: ' +
             part +
-            " from " +
+            ' from ' +
             path +
-            ", last: " +
-            last?.pathToRoot(),
+            ', last: ' +
+            last?.pathToRoot()
         );
       }
 
@@ -158,35 +160,35 @@ export function useOasTree(
 
   const onCheck = (
     values: Key[] | CheckedProps,
-    eventObj?: React.MouseEvent,
+    eventObj?: React.MouseEvent
   ): void => {
     const set = new Set<string>(selectedPaths);
 
     const eventClass =
       (_.get(
         eventObj?.nativeEvent?.target,
-        "className",
-      ) as unknown as string) ?? "";
+        'className'
+      ) as unknown as string) ?? '';
 
-    const eventNode = _.get(eventObj, "node") as unknown as Node;
+    const eventNode = _.get(eventObj, 'node') as unknown as Node;
 
-    if (eventClass.includes("rc-tree-title") && !eventNode.parent) {
+    if (eventClass.includes('rc-tree-title') && !eventNode.parent) {
       return;
     }
 
     // add all the parent nodes from the checked nodes
     // needed for the backend to generate the answers
-    if (typeof values === "object") {
+    if (typeof values === 'object') {
       const checkedProps: CheckedProps = values as CheckedProps;
 
       const added: Key | undefined = _.first(
-        _.difference(checkedProps.checked, checkedKeys.checked),
+        _.difference(checkedProps.checked, checkedKeys.checked)
       );
 
       if (added) {
         const node = findNode(treeData, added as string);
         if (!node?.parent) {
-          set.add(added + ">**");
+          set.add(added + '>**');
 
           // now iterate recursively through all the children and disable the checkbox
           const disableChildren = (n: Node) => {
@@ -207,21 +209,21 @@ export function useOasTree(
 
       // now process the removed ones
       const removed = _.first(
-        _.difference(checkedKeys.checked, checkedProps.checked),
+        _.difference(checkedKeys.checked, checkedProps.checked)
       );
 
       if (removed) {
         const node = findNode(treeData, removed as string);
         if (!node?.parent) {
-          set.delete(removed + ">**");
+          set.delete(removed + '>**');
 
           // now iterate recursively through all the children and disable the checkbox
           const enableChildren = (n: Node) => {
             if (n.children) {
               n.children.forEach((c) => {
-                const id = c.key.substring(c.key.lastIndexOf(">") + 1);
+                const id = c.key.substring(c.key.lastIndexOf('>') + 1);
                 const isScalarOrEnum =
-                  id.startsWith("prop:scalar") || id.startsWith("enum:");
+                  id.startsWith('prop:scalar') || id.startsWith('enum:');
 
                 c.disableCheckbox = !isScalarOrEnum;
                 enableChildren(c);
@@ -235,7 +237,7 @@ export function useOasTree(
         }
       }
 
-      console.log("[web] added", added, "removed", removed);
+      console.log('[web] added', added, 'removed', removed);
 
       setCheckedKeys({
         checked: [...checkedProps.checked],
@@ -247,26 +249,26 @@ export function useOasTree(
 
       // reset generated state
       parser.context?.generatedSet.clear();
-      console.log("[web] paths", newPaths);
+      console.log('[web] paths', newPaths);
       onChange(newPaths, parser.generateSchema(newPaths));
     }
   };
 
-  const getId = (key: string) => key.substring(key.lastIndexOf(">") + 1);
+  const getId = (key: string) => key.substring(key.lastIndexOf('>') + 1);
 
   const selectAllScalars = (info: {
     event: React.MouseEvent;
     node: EventDataNode<Node>;
   }) => {
-    console.log("[web] right click", info.event, info.node);
+    console.log('[web] right click', info.event, info.node);
     const n = findNode(treeData, info.node.key);
     if (!n) return;
 
-    const id = n.key.substring(n.key.lastIndexOf(">") + 1);
+    const id = n.key.substring(n.key.lastIndexOf('>') + 1);
 
-    if (id.startsWith("obj:") || id.startsWith("comp:")) {
+    if (id.startsWith('obj:') || id.startsWith('comp:')) {
       const keys: Key[] | undefined = n.children
-        ?.filter((n: Node) => getId(n.key as string).startsWith("prop:scalar"))
+        ?.filter((n: Node) => getId(n.key as string).startsWith('prop:scalar'))
         .map((c) => c.key);
 
       onCheck(
@@ -275,7 +277,7 @@ export function useOasTree(
           checked: [...checkedKeys?.checked, ...keys!],
           halfChecked: checkedKeys.halfChecked,
         },
-        undefined as unknown as React.MouseEvent,
+        undefined as unknown as React.MouseEvent
       );
     }
   };

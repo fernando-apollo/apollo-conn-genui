@@ -4,7 +4,6 @@ import {
   Heading,
   CardBody,
   HStack,
-  Box,
 } from '@chakra-ui/react';
 import { OASSpecChooser } from '@/components/uploaders/OASSpecChooser.tsx';
 import { OasSpecTree } from '@/components/tree/OasSpecTree.tsx';
@@ -12,9 +11,8 @@ import { useEffect, useState } from 'react';
 import { FileChangeDetails } from '@zag-js/file-upload';
 
 import { useAppState } from '@/hooks/useAppState.tsx';
-import { MdHourglassBottom } from 'react-icons/md';
 import { OasGen } from 'apollo-conn-gen';
-import { Wait, WaitCircle, WaitLine } from '../progress/indicators';
+import { WaitCircle } from '../progress/indicators';
 
 interface IOasPanelProps {
   onChange: (paths: string[], schema: string) => void;

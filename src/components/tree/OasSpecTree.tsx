@@ -6,10 +6,12 @@ import Tree, { TreeNodeProps } from 'rc-tree';
 import { IoMdReturnLeft, IoMdReturnRight } from 'react-icons/io';
 import { FiFolderPlus } from 'react-icons/fi';
 import {
+  MdCircle,
   MdDataArray,
   MdDataObject,
   MdKeyboardArrowRight,
   MdOutlineSearch,
+  MdQuestionMark,
 } from 'react-icons/md';
 import {
   TbHttpDelete,
@@ -18,7 +20,7 @@ import {
   TbHttpPost,
   TbHttpPut,
 } from 'react-icons/tb';
-import { FaArrowTurnDown } from 'react-icons/fa6';
+import { FaArrowTurnDown, FaCircleDot } from 'react-icons/fa6';
 import { type IType } from 'apollo-conn-gen/oas';
 import { useOasTree } from '@/hooks/useOasTree.ts';
 import { createListCollection, HStack, Input, VStack } from '@chakra-ui/react';
@@ -215,8 +217,11 @@ const getIcon = (props: TreeNodeProps) => {
   if (props.isLeaf) return <MdKeyboardArrowRight color='red' />;
 
   if (key.startsWith('array:') || key.startsWith('prop:array:'))
-    if (props.isLeaf) return <MdDataArray color='red' />;
+    if (props.isLeaf) return <MdCircle color='red' />;
     else return <MdDataArray color='rgb(176, 57, 0)' />;
 
-  return <FiFolderPlus color='red' />;
+  if (key.startsWith('scalar:'))
+    return <MdKeyboardArrowRight color='rgb(176, 57, 0)' />;
+
+  return <MdQuestionMark color='red' />;
 };

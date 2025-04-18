@@ -1,99 +1,74 @@
-import {Allotment} from 'allotment';
-import {Box, Link, TabsContent, TabsList, TabsRoot, TabsTrigger, Text, VStack} from '@chakra-ui/react';
-
+import {
+  CloseButton,
+  DrawerBackdrop,
+  DrawerBody,
+  DrawerCloseTrigger,
+  DrawerContent,
+  DrawerHeader,
+  DrawerPositioner,
+  DrawerTitle,
+  IconButton,
+  Portal,
+  VStack,
+} from '@chakra-ui/react';
 import './App.css';
 import 'allotment/dist/style.css';
-import {LuFolder} from 'react-icons/lu';
-import {EditorWrapper} from '@/components/editor/EditorWrapper.tsx';
-import {OasPanel} from '@/components/panels/OasPanel.tsx';
-import {JsonPanel} from '@/components/panels/JsonPanel.tsx';
-import Header from "@/components/Header.tsx";
-import {Component, useEffect, useState} from "react";
-import {SelectionPaths} from "@/components/SelectionPaths.tsx";
-
-import {useAppState} from "@/hooks/useAppState.tsx";
-
-class Footer extends Component {
-  render() {
-    return (
-      <Box className='footer' fontFamily='p'>
-        <Text textStyle='xs'>
-          Built with ❤️ by the Solution Engineering Team @ Apollo &nbsp;
-          (<Link target='_blank'
-                 href='https://www.apollographql.com/docs/graphos/reference/feature-launch-stages#experimental'>experimental
-        </Link>)
-        </Text>
-      </Box>);
-  }
-}
+import { useEffect, useState } from 'react';
+import { Footer } from './components/Footer';
+import Header from '@/components/Header.tsx';
+import { AllotmentLayout } from '@/components/AllotmentLayout';
+import { DrawerRoot, DrawerTrigger } from './components/ui/drawer';
+import { IoMdOptions } from 'react-icons/io';
+import { Preferences } from './components/preferences/Preferences';
 
 function App() {
-  // const {oasGen, schema, setSchema} = useAppState();
-  const [paths, setPaths] = useState<string[]>([]);
-  const [tab, setTab] = useState<string | null>("oas")
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const {schema, setSchema} = useAppState()
-  const [selectionPathsVisible, setSelectionPathsVisible] = useState(false);
-
-  useEffect(() => {
-    console.log('[web] selectionPathsVisible', selectionPathsVisible);
-  })
+  // useEffect(() => {
+  //   console.log('[web] selectionPathsVisible', selectionPathsVisible);
+  // });
 
   return (
-    <VStack style={{flexGrow: 1}}>
-      <Header/>
-      <Allotment vertical={true} defaultSizes={[400, 100]}
-                 onVisibleChange={(index, visible) => {
-                    console.log('[web] onVisibleChange', index, visible);
-                    if (index === 1) {
-                      setSelectionPathsVisible(visible);
-                    }
-                 }}
-        >
-        <Allotment.Pane>
-          <Allotment>
-            <Allotment.Pane className='left-splitview-panel'>
-              <TabsRoot className='main-tabs-panel' defaultValue='oas' size='sm' pt={3} mr={1}
-                        onValueChange={(e) => setTab(e.value)}>
-                <TabsList>
-                  <TabsTrigger value='oas'><LuFolder/> OAS</TabsTrigger>
-                  <TabsTrigger value='json'><LuFolder/> JSON</TabsTrigger>
-                </TabsList>
-                <TabsContent value='oas' className='oas-tab-content' pt={0} m={0}>
-                  <OasPanel key='oasPanel' onChange={(paths, schema) => {
-                    setPaths(paths);
-                    setSchema(schema);
-                  }}/>
-                </TabsContent>
-                <TabsContent value='json' className="json-tab-content" pt={0} m={0}>
-                  <JsonPanel key={'jsonPanel'} onChange={setSchema}/>
-                </TabsContent>
-              </TabsRoot>
-            </Allotment.Pane>
-            <Allotment.Pane>
-              <EditorWrapper
-                value={schema}
-                showValidation={false}
-                language={'graphql'}
-                info='The connector schema will appear in the editor below'
-                title={'Connector schema'}
-              />
-            </Allotment.Pane>
-          </Allotment>
-        </Allotment.Pane>
-        {tab === 'oas' &&
-            <Allotment.Pane snap className="bottom-splitview-panel"
-                            visible={selectionPathsVisible}
-                            maxSize={selectionPathsVisible ? 56 : Infinity}>
-                <SelectionPaths paths={paths} onChange={setSchema} onCollapse={() => {
-                  console.log('onCollapse');
-                  setSelectionPathsVisible(false);
-                }}/>
-            </Allotment.Pane>
-        }
-      </Allotment>
-      <Footer/>
-    </VStack>
+    <DrawerRoot open={drawerOpen} onOpenChange={(e) => setDrawerOpen(e.open)}>
+      <VStack style={{ flexGrow: 1 }}>
+        <Header
+          actions={[
+            <DrawerTrigger asChild key={'toggle-drawer-action'}>
+              <IconButton size='sm' colorPalette='brand' variant='solid'>
+                <IoMdOptions />
+              </IconButton>
+            </DrawerTrigger>,
+          ]}
+        />
+        <AllotmentLayout
+        // schema={schema}
+        // setSchema={setSchema}
+        // paths={paths}
+        // setPaths={setPaths}
+        // tab={tab}
+        // setTab={setTab}
+        // selectionPathsVisible={selectionPathsVisible}
+        // setSelectionPathsVisible={setSelectionPathsVisible}
+        />
+        <Footer />
+      </VStack>
+      <Portal>
+        <DrawerBackdrop />
+        <DrawerPositioner>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Generator Options</DrawerTitle>
+            </DrawerHeader>
+            <DrawerBody>
+              <Preferences />
+            </DrawerBody>
+            <DrawerCloseTrigger asChild>
+              <CloseButton size='sm' />
+            </DrawerCloseTrigger>
+          </DrawerContent>
+        </DrawerPositioner>
+      </Portal>
+    </DrawerRoot>
   );
 }
 

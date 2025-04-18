@@ -4,6 +4,7 @@ import {
   Heading,
   CardBody,
   HStack,
+  IconButton,
 } from '@chakra-ui/react';
 import { OASSpecChooser } from '@/components/uploaders/OASSpecChooser.tsx';
 import { OasSpecTree } from '@/components/tree/OasSpecTree.tsx';
@@ -13,20 +14,34 @@ import { FileChangeDetails } from '@zag-js/file-upload';
 import { useAppState } from '@/hooks/useAppState.tsx';
 import { OasGen } from 'apollo-conn-gen';
 import { WaitCircle } from '../progress/indicators';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { defaultPreferences, Preferences } from '../preferences/Preferences';
+import { MdRefresh } from 'react-icons/md';
+import _ from 'lodash';
 
 interface IOasPanelProps {
+  paths: string[];
   onChange: (paths: string[], schema: string) => void;
 }
 
-export const OasPanel = ({ onChange }: IOasPanelProps) => {
-  const { oasGen, setOasGen, setFileName, setSchema /*handleOasFileChange*/ } =
-    useAppState();
+export const OasPanel = ({ paths = [], onChange }: IOasPanelProps) => {
+  const {
+    oasGen,
+    setOasGen,
+    setFileName,
+    setSchema,
+    /*handleOasFileChange*/
+  } = useAppState();
+
+  const [_preferences, _setPreferences, getLatestPreferences] =
+    useLocalStorage<Preferences>('user-preferences', defaultPreferences);
 
   const [working, setWorking] = useState<boolean>(false);
 
   useEffect(() => {
     console.log('[web] spec changed', oasGen?.title(), oasGen?.paths.values());
-  }, [oasGen]);
+    console.log('[web] paths', _.isEmpty(paths));
+  }, [oasGen, paths]);
 
   const handleOasFileChange: (e: FileChangeDetails) => void = (
     e: FileChangeDetails
@@ -46,9 +61,11 @@ export const OasPanel = ({ onChange }: IOasPanelProps) => {
 
         const content = reader.target.result as ArrayBuffer;
         try {
-          const gen = await OasGen.fromData(content, { skipValidation: true });
-          await gen.visit();
+          const gen = await OasGen.fromData(content, {
+            ...getLatestPreferences(),
+          });
 
+          await gen.visit();
           setOasGen(gen);
           setSchema('');
         } finally {
@@ -80,6 +97,23 @@ export const OasPanel = ({ onChange }: IOasPanelProps) => {
           )}
           {working && <WaitCircle />}
           <OASSpecChooser onFileChange={handleOasFileChange} />
+          {oasGen && (
+            <IconButton
+              disabled={_.isEmpty(paths)}
+              variant='solid'
+              colorPalette='brand'
+              size='sm'
+              onClick={() => {
+                const latest = getLatestPreferences();
+                oasGen.options = latest;
+                oasGen!.context!.generatedSet.clear();
+                console.log('[web] parsed paths', paths, 'preferences', latest);
+                onChange(paths, oasGen.generateSchema(paths));
+              }}
+            >
+              <MdRefresh />
+            </IconButton>
+          )}
         </HStack>
       </CardHeader>
       <CardBody m={0} p='2'>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Composed, IType, Ref, Type, Union } from "apollo-conn-gen/oas";
+import { Composed, IType, Type, Union } from "apollo-conn-gen/oas";
 import { OasGen } from "apollo-conn-gen";
 import { EventDataNode, Key } from "rc-tree/lib/interface";
 import _ from "lodash";
@@ -305,9 +305,10 @@ export function useOasTree(
           child.visit(parser.context!);
         }
 
-        if (child instanceof Ref) {
-          result = [child.refType!];
-        }
+        // refs don't longer exist
+        // if (child instanceof Ref) {
+        //   result = [child.refType!];
+        // }
       }
     }
 

@@ -1,7 +1,7 @@
 import { OasGen } from 'apollo-conn-gen';
 
 import 'rc-tree/assets/index.css';
-import { Key, useEffect, useRef, useState } from 'react';
+import { Key, useEffect, useRef, useState, useCallback } from 'react';
 import Tree, { TreeNodeProps } from 'rc-tree';
 import { IoMdReturnLeft, IoMdReturnRight } from 'react-icons/io';
 
@@ -51,13 +51,14 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
     onLoadData,
     onCheck,
     selectAllScalars,
+    setSelectedPaths,
   } = useOasTree(parser, onChange);
 
   const [filter, setFilter] = useState<string>('');
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [expandedKeys, setExpandedKeys] = useState<Key[]>([]);
 
-  const loadPaths = () => {
+  const loadPaths = useCallback(() => {
     let paths: IType[] = Array.from(parser.paths.values());
 
     if (filter && filter.length > 0) {
@@ -84,20 +85,27 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
         className: 'container-node',
       };
     });
-
+    setSelectedPaths([]);
     setTreeData(data);
     // setExpandedKeys([]);
     setCheckedKeys({
       checked: [],
       halfChecked: [],
     });
-  };
+  }, [
+    parser.paths,
+    parser.context,
+    filter,
+    setSelectedPaths,
+    setTreeData,
+    setCheckedKeys,
+  ]);
 
   // set initial state
   useEffect(() => {
     // setExpandedKeys([]);
     loadPaths();
-  }, [parser]);
+  }, [loadPaths]);
 
   const debouncedSearch = useDebounce({
     callback: () => {

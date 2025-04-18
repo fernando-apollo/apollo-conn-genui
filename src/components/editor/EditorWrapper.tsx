@@ -10,7 +10,8 @@ import {
 } from '@chakra-ui/react';
 import { Editor } from '@monaco-editor/react';
 import { useTheme } from 'next-themes';
-import { editor } from 'monaco-editor';
+// import { editor } from 'monaco-editor';
+import * as monaco from 'monaco-editor';
 import { JSX, useState } from 'react';
 import { IoMdInformationCircleOutline } from 'react-icons/io';
 import { Tooltip } from '../ui/tooltip';
@@ -56,7 +57,7 @@ export const EditorWrapper = ({
   }
 */
 
-  const handleEditorValidation = (markers: editor.IMarker[]) => {
+  const handleEditorValidation = (markers: monaco.editor.IMarker[]) => {
     if (showValidation) setIInvalidValue(markers.length > 0);
   };
 

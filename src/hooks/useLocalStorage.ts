@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 /**
  * A hook for managing local storage with TypeScript support
@@ -8,12 +8,12 @@ import { useState, useEffect } from 'react';
  */
 export function useLocalStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
 ): [T, (value: T | ((val: T) => T)) => void, () => T] {
   // Get from local storage then parse stored json or return initialValue
   const readValue = (): T => {
     // Prevent build error "window is undefined" but keep working
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return initialValue;
     }
 
@@ -41,7 +41,7 @@ export function useLocalStorage<T>(
       setStoredValue(valueToStore);
 
       // Save to local storage
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
       }
     } catch (error) {
@@ -63,11 +63,11 @@ export function useLocalStorage<T>(
     };
 
     // Add event listener
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
     // Remove event listener on cleanup
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, [key]);
 

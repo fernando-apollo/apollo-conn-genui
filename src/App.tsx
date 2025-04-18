@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import './App.css';
 import 'allotment/dist/style.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Footer } from './components/Footer';
 import Header from '@/components/Header.tsx';
 import { AllotmentLayout } from '@/components/AllotmentLayout';

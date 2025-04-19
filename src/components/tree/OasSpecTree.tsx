@@ -1,7 +1,7 @@
 import { OasGen } from 'apollo-conn-gen';
 
 import 'rc-tree/assets/index.css';
-import { Key, useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Tree, { TreeNodeProps } from 'rc-tree';
 import { IoMdReturnLeft, IoMdReturnRight } from 'react-icons/io';
 
@@ -56,7 +56,7 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
 
   const [filter, setFilter] = useState<string>('');
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [expandedKeys, setExpandedKeys] = useState<Key[]>([]);
+  // const [expandedKeys, setExpandedKeys] = useState<Key[]>([]);
 
   const loadPaths = useCallback(() => {
     let paths: IType[] = Array.from(parser.paths.values());
@@ -109,7 +109,7 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
 
   const debouncedSearch = useDebounce({
     callback: () => {
-      console.log('[web] expandedKeys', expandedKeys);
+      // console.log('[web] expandedKeys', expandedKeys);
       return loadPaths();
     },
   });
@@ -162,7 +162,7 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
         treeData={treeData}
         checkable
         checkedKeys={checkedKeys}
-        expandedKeys={expandedKeys}
+        // expandedKeys={expandedKeys}
         selectable={false}
         loadData={onLoadData}
         checkStrictly={true}
@@ -170,9 +170,9 @@ export const OasSpecTree = ({ parser, onChange }: ISpecTreeProps) => {
         showLine={true}
         onRightClick={selectAllScalars}
         icon={getIcon}
-        defaultExpandedKeys={expandedKeys}
+        // defaultExpandedKeys={expandedKeys}
         defaultCheckedKeys={checkedKeys?.checked}
-        onExpand={setExpandedKeys}
+        // onExpand={setExpandedKeys}
         defaultExpandAll={true}
         defaultExpandParent={true}
         autoExpandParent={true}

@@ -1,13 +1,19 @@
-include .production.env
+ENV_FILE := .production.env
+include ${ENV_FILE}
 
 define get_tag
-	$(eval current_tag := $(shell grep '^TAG=' .production.env | cut -d '=' -f2))
+	@if [ ! -f $(ENV_FILE) ]; then \
+		echo "Error: $(ENV_FILE) does not exist - example: env.sample"; \
+		exit 1; \
+	fi
+	$(eval current_tag := $(shell grep '^TAG=' $(ENV_FILE) | cut -d '=' -f2))
 	$(eval major := $(shell echo $(current_tag) | cut -d '.' -f1))
 	$(eval minor := $(shell echo $(current_tag) | cut -d '.' -f2))
 	$(eval new_minor := $(shell echo $$(($(minor) + 1))))
 	$(eval TAG := $(major).$(new_minor))
+	# update the TAG in the target file too
+	$(shell sed -i.bak "s/^TAG=.*/TAG=$(TAG)/" $(ENV_FILE))
 	$(eval export TAG)
-	$(shell sed -i.bak "s/^TAG=.*/TAG=$(TAG)/" .production.env)
 endef
 
 publish:

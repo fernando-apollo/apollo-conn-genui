@@ -19,7 +19,6 @@ import { defaultPreferences, Preferences } from '../preferences/Preferences';
 import { MdRefresh } from 'react-icons/md';
 import _ from 'lodash';
 import { Alert } from '../ui/alert';
-import { CloseButton } from '../ui/close-button';
 
 interface IOasPanelProps {
   paths: string[];

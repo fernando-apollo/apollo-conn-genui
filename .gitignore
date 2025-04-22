@@ -26,3 +26,4 @@ dist-ssr
 .deploy.md
 
 .production.env
+.production.env.bak

@@ -18,6 +18,8 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { defaultPreferences, Preferences } from '../preferences/Preferences';
 import { MdRefresh } from 'react-icons/md';
 import _ from 'lodash';
+import { Alert } from '../ui/alert';
+import { CloseButton } from '../ui/close-button';
 
 interface IOasPanelProps {
   paths: string[];
@@ -28,6 +30,7 @@ export const OasPanel = ({ paths = [], onChange }: IOasPanelProps) => {
   const {
     oasGen,
     setOasGen,
+    fileName,
     setFileName,
     setSchema,
     /*handleOasFileChange*/
@@ -37,6 +40,7 @@ export const OasPanel = ({ paths = [], onChange }: IOasPanelProps) => {
     useLocalStorage<Preferences>('user-preferences', defaultPreferences);
 
   const [working, setWorking] = useState<boolean>(false);
+  const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
     console.log('[web] spec changed', oasGen?.title(), oasGen?.paths.values());
@@ -68,6 +72,8 @@ export const OasPanel = ({ paths = [], onChange }: IOasPanelProps) => {
           await gen.visit();
           setOasGen(gen);
           setSchema('');
+        } catch (err: unknown) {
+          setError(err instanceof Error ? err.message : String(err));
         } finally {
           setWorking(false);
           console.log('[web] stopped working.');
@@ -96,8 +102,13 @@ export const OasPanel = ({ paths = [], onChange }: IOasPanelProps) => {
             </Heading>
           )}
           {working && <WaitCircle />}
-          <OASSpecChooser onFileChange={handleOasFileChange} />
-          {oasGen && (
+          <OASSpecChooser
+            onFileChange={(e: FileChangeDetails) => {
+              setError(undefined);
+              return handleOasFileChange(e);
+            }}
+          />
+          {!error && oasGen && (
             <IconButton
               disabled={_.isEmpty(paths)}
               variant='solid'
@@ -117,7 +128,16 @@ export const OasPanel = ({ paths = [], onChange }: IOasPanelProps) => {
         </HStack>
       </CardHeader>
       <CardBody m={0} p='2'>
-        {oasGen && <OasSpecTree parser={oasGen} onChange={onChange} />}
+        {error && (
+          <Alert
+            status='error'
+            title={`Error parsing '${fileName}'`}
+            children={error}
+          />
+        )}
+        {!error && oasGen && (
+          <OasSpecTree parser={oasGen} onChange={onChange} />
+        )}
       </CardBody>
     </CardRoot>
   );

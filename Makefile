@@ -1,6 +1,7 @@
 include .production.env
 
 publish:
+	./update_tag.sh && \
 	gcloud builds submit --tag ${LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${APP_NAME}:${TAG}
 
 deploy:

@@ -20,6 +20,7 @@ import { AllotmentLayout } from '@/components/AllotmentLayout';
 import { DrawerRoot, DrawerTrigger } from './components/ui/drawer';
 import { IoMdOptions } from 'react-icons/io';
 import { Preferences } from './components/preferences/Preferences';
+import { Toaster } from './components/ui/toaster';
 
 function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -40,17 +41,9 @@ function App() {
             </DrawerTrigger>,
           ]}
         />
-        <AllotmentLayout
-        // schema={schema}
-        // setSchema={setSchema}
-        // paths={paths}
-        // setPaths={setPaths}
-        // tab={tab}
-        // setTab={setTab}
-        // selectionPathsVisible={selectionPathsVisible}
-        // setSelectionPathsVisible={setSelectionPathsVisible}
-        />
+        <AllotmentLayout />
         <Footer />
+        <Toaster />
       </VStack>
       <Portal>
         <DrawerBackdrop />

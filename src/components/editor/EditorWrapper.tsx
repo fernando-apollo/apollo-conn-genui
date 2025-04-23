@@ -31,9 +31,9 @@ type IEditorProps = {
   collapsed?: boolean;
 };
 
-export const EditorWrapper = ({
+export const JsonEditor = ({
   value,
-  language = 'graphql',
+  language = 'json',
   title,
   info = '',
   readOnly = true,

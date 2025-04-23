@@ -1,29 +1,34 @@
-import {Box, CardBody, CardHeader, CardRoot, HStack, IconButton,} from '@chakra-ui/react';
+import {
+  Box,
+  CardBody,
+  CardHeader,
+  CardRoot,
+  HStack,
+  IconButton,
+} from '@chakra-ui/react';
 
-import {JsonFileChooser, JsonFolderChooser,} from '@/components/uploaders/JsonSpecChooser.tsx';
-import {JSX, useEffect, useState} from 'react';
-import {JsonGen} from 'apollo-conn-gen';
-import {EditorWrapper} from '@/components/editor/EditorWrapper.tsx';
-import {IoMdColorWand} from 'react-icons/io';
-import {Tooltip} from '@/components/ui/tooltip.tsx';
-import {Tag} from '@/components/ui/tag.tsx';
-import {UploadedFile, useUploadState} from '@/hooks/useUploadState';
-import _ from 'lodash'
-import {useDebounce} from "@/hooks/useDebounce.ts";
-import {MdHourglassBottom} from "react-icons/md";
+import {
+  JsonFileChooser,
+  JsonFolderChooser,
+} from '@/components/uploaders/JsonSpecChooser.tsx';
+import { JSX, useEffect, useState } from 'react';
+import { JsonGen } from 'apollo-conn-gen';
+import { JsonEditor } from '@/components/editor/EditorWrapper.tsx';
+import { IoMdColorWand } from 'react-icons/io';
+import { Tooltip } from '@/components/ui/tooltip.tsx';
+import { Tag } from '@/components/ui/tag.tsx';
+import { UploadedFile, useUploadState } from '@/hooks/useUploadState';
+import _ from 'lodash';
+import { useDebounce } from '@/hooks/useDebounce.ts';
+import { MdHourglassBottom } from 'react-icons/md';
 
 interface IJsonPanelProps {
   onChange: (schema: string) => void;
 }
 
-export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
-  const {
-    fileName,
-    setFileName,
-    uploadedFiles,
-    onFileChange,
-    onFolderChange,
-  } = useUploadState();
+export const JsonPanel = ({ onChange }: IJsonPanelProps): JSX.Element => {
+  const { fileName, setFileName, uploadedFiles, onFileChange, onFolderChange } =
+    useUploadState();
 
   const [content, setContent] = useState<string>('{}');
   const [files, setFiles] = useState<UploadedFile[]>([]);
@@ -32,9 +37,11 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
 
   const updateFileContent = (newContent: string) => {
     if (!fileName) return;
-    setFiles(files.map(file =>
-      file.name === fileName ? {...file, content: newContent} : file
-    ));
+    setFiles(
+      files.map((file) =>
+        file.name === fileName ? { ...file, content: newContent } : file
+      )
+    );
   };
 
   useEffect(() => {
@@ -68,7 +75,7 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
     callback: () => {
       onGenerateSchema();
       setWorking(false);
-    }
+    },
   });
 
   const FileList = () => (
@@ -83,7 +90,9 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
               closable={files.length > 1}
               size='lg'
               key={index}
-              onClose={async () => setFiles(files.filter((_, i) => i !== index))}
+              onClose={async () =>
+                setFiles(files.filter((_, i) => i !== index))
+              }
               onClick={() => {
                 setFileName(processed.name);
                 setContent(processed.content);
@@ -102,16 +111,16 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
       className='json-panel-container'
       m={0}
       p={0}
-      style={{flex: 1}}
+      style={{ flex: 1 }}
       size='sm'
       border='0'
     >
       <CardHeader m={0} p={2}>
         <HStack display='flex'>
-          <JsonFileChooser onFileChange={onFileChange}/>
-          <JsonFolderChooser onFileChange={onFolderChange}/>
+          <JsonFileChooser onFileChange={onFileChange} />
+          <JsonFolderChooser onFileChange={onFolderChange} />
           <HStack flex='1' justifyContent='flex-end'>
-            {working && <MdHourglassBottom/>}
+            {working && <MdHourglassBottom />}
             <Tooltip content='Generate schema for contents'>
               <IconButton
                 colorPalette='brand'
@@ -122,7 +131,7 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
                 disabled={working || invalidJson}
                 onClick={onGenerateSchema}
               >
-                <IoMdColorWand/>
+                <IoMdColorWand />
               </IconButton>
             </Tooltip>
           </HStack>
@@ -130,10 +139,12 @@ export const JsonPanel = ({onChange}: IJsonPanelProps): JSX.Element => {
       </CardHeader>
 
       <CardBody m={0} p='0' pt={2}>
-        {fileName && files.length > 0 &&
-            <Box pl='2' pr='2'><FileList/></Box>
-        }
-        <EditorWrapper
+        {fileName && files.length > 0 && (
+          <Box pl='2' pr='2'>
+            <FileList />
+          </Box>
+        )}
+        <JsonEditor
           title='Input JSON'
           info="You can edit the contents below and click on the 'Generate schema for contents' button to re-generate the schema."
           value={content}

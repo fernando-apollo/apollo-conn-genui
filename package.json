@@ -17,7 +17,7 @@
     "@emotion/react": "^11.14.0",
     "@monaco-editor/react": "^4.7.0",
     "allotment": "^1.20.3",
-    "apollo-conn-gen": "^0.3.3",
+    "apollo-conn-gen": "^0.4.0",
     "lodash": "^4.17.21",
     "memfs": "^4.17.0",
     "monaco-editor": "^0.52.2",
@@ -25,7 +25,8 @@
     "rc-tree": "^5.13.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "register-apollo-graphql-language": "file:/Users/fernando/Development/Apollo/studio-ui/packages/register-apollo-graphql-language"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
@@ -43,5 +44,6 @@
     "vite": "^6.2.0",
     "vite-plugin-node-polyfills": "^0.23.0",
     "vite-tsconfig-paths": "^5.1.4"
-  }
+  },
+  "apolloLanguageServerVersion": "0.3.5"
 }

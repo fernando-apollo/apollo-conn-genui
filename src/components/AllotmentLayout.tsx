@@ -1,12 +1,13 @@
 import { Allotment } from 'allotment';
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from '@chakra-ui/react';
 import { LuFolder } from 'react-icons/lu';
-import { EditorWrapper } from '@/components/editor/EditorWrapper';
+import { JsonEditor } from '@/components/editor/EditorWrapper';
 import { OasPanel } from '@/components/panels/OasPanel';
 import { JsonPanel } from '@/components/panels/JsonPanel';
 import { SelectionPaths } from '@/components/SelectionPaths';
 import { useEffect, useState } from 'react';
 import { useAppState } from '@/hooks/useAppState.tsx';
+import { ConnectorEditor } from './editor/ConnectorEditor';
 
 export const AllotmentLayout = () => {
   const { oasGen, schema, setSchema } = useAppState();
@@ -71,10 +72,9 @@ export const AllotmentLayout = () => {
             </TabsRoot>
           </Allotment.Pane>
           <Allotment.Pane>
-            <EditorWrapper
+            <ConnectorEditor
               value={schema}
-              showValidation={false}
-              language={'graphql'}
+              showValidation={true}
               info='The connector schema will appear in the editor below'
               title={'Connector schema'}
             />

@@ -277,19 +277,15 @@ export const ConnectorEditor = ({
           {/* composition stuff */}
           <IconButton
             variant='ghost'
-            disabled={value === '' || invalidSubgraphs.length > 0}
+            disabled={
+              value === '' || invalidSubgraphs.length > 0 || isComposing
+            }
             type='button'
             size='sm'
-            loading={isComposing}
             aria-label='Compose graph'
             onClick={() => triggerComposition()}
           >
             <FaCubes />
-            {/* {autoComposition && (
-              // TODO: orbit currently sets the size and color of icons inside buttons in a way that can't be overridden
-              // so we need to use `!important` for this style for now.
-              <IconSync className='absolute right-1 top-1 !size-2' />
-            )} */}
           </IconButton>
 
           {actions}

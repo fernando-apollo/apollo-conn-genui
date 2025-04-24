@@ -8,6 +8,7 @@ import { SelectionPaths } from '@/components/SelectionPaths';
 import { useEffect, useState } from 'react';
 import { useAppState } from '@/hooks/useAppState.tsx';
 import { ConnectorEditor } from './editor/ConnectorEditor';
+import { ApolloGraphqlActionsProvider } from 'register-apollo-graphql-language';
 
 export const AllotmentLayout = () => {
   const { oasGen, schema, setSchema } = useAppState();
@@ -72,12 +73,14 @@ export const AllotmentLayout = () => {
             </TabsRoot>
           </Allotment.Pane>
           <Allotment.Pane>
-            <ConnectorEditor
-              value={schema}
-              showValidation={true}
-              info='The connector schema will appear in the editor below'
-              title={'Connector schema'}
-            />
+            <ApolloGraphqlActionsProvider>
+              <ConnectorEditor
+                value={schema}
+                showValidation={true}
+                info='The connector schema will appear in the editor below'
+                title={'Connector schema'}
+              />
+            </ApolloGraphqlActionsProvider>
           </Allotment.Pane>
         </Allotment>
       </Allotment.Pane>

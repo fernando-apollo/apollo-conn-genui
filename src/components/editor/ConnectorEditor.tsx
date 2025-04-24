@@ -15,16 +15,21 @@ import {
   HStack,
   Box,
   ClipboardTrigger,
+  IconButton,
 } from '@chakra-ui/react';
+
 import { IoMdInformationCircleOutline } from 'react-icons/io';
 import { Tooltip } from '../ui/tooltip';
 import { ClipboardIconButton, ClipboardRoot } from '../ui/clipboard';
-import { MdOutlineWarningAmber } from 'react-icons/md';
-import { FaRegCheckCircle } from 'react-icons/fa';
+import { MdHourglassBottom, MdOutlineWarningAmber } from 'react-icons/md';
+import { FaCubes, FaRegCheckCircle } from 'react-icons/fa';
+import IconServices from '@apollo/icons/default/IconServices.svg';
+import IconSync from '@apollo/icons/large/IconSync.svg';
 
 import {
   languageId,
   registerApolloGraphQLLanguage,
+  useApolloGraphqlActions,
 } from 'register-apollo-graphql-language';
 
 import packageJson from '../../../package.json';
@@ -125,6 +130,14 @@ export const ConnectorEditor = ({
   const [validationErrors, setValidationErrors] = useState<
     monaco.editor.IMarker[]
   >([]);
+
+  const {
+    autoComposition,
+    setAutoComposition,
+    triggerComposition,
+    isComposing,
+    invalidSubgraphs,
+  } = useApolloGraphqlActions();
 
   const handleEditorValidation = useCallback(
     (markers: monaco.editor.IMarker[]) => {
@@ -236,6 +249,7 @@ export const ConnectorEditor = ({
             </Tooltip>
           )}
           <Box flex={1} />
+          {isComposing && <MdHourglassBottom />}
           {showValidation && isInvalidValue && (
             <Tooltip
               content={validationErrors
@@ -251,9 +265,33 @@ export const ConnectorEditor = ({
           )}
           <ClipboardRoot value={value}>
             <ClipboardTrigger asChild>
-              <ClipboardIconButton size='xs' m={1} p={0} />
+              <ClipboardIconButton
+                size='xs'
+                m={1}
+                p={0}
+                disabled={value === ''}
+              />
             </ClipboardTrigger>
           </ClipboardRoot>
+
+          {/* composition stuff */}
+          <IconButton
+            variant='ghost'
+            disabled={value === '' || invalidSubgraphs.length > 0}
+            type='button'
+            size='sm'
+            loading={isComposing}
+            aria-label='Compose graph'
+            onClick={() => triggerComposition()}
+          >
+            <FaCubes />
+            {/* {autoComposition && (
+              // TODO: orbit currently sets the size and color of icons inside buttons in a way that can't be overridden
+              // so we need to use `!important` for this style for now.
+              <IconSync className='absolute right-1 top-1 !size-2' />
+            )} */}
+          </IconButton>
+
           {actions}
         </HStack>
       </CardHeader>
@@ -272,6 +310,7 @@ export const ConnectorEditor = ({
           ref={divRef}
           style={{
             flex: 1,
+            height: '100%',
           }}
         />
       </CardBody>
